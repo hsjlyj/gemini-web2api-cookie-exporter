@@ -1,0 +1,27 @@
+[project]
+name = "gemini-web2api-cookie-exporter"
+version = "0.1.0"
+description = "Export Gemini Web cookies and tokens for gemini-web2api."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "playwright>=1.44.0",
+    "headroom-ai[code]",
+]
+
+[project.scripts]
+export-gemini-cookie = "export_gemini_cookie:main"
+gemini-cookie-watchdog = "gemini_cookie_watchdog:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E","F","W","I"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true

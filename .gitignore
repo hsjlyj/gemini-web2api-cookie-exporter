@@ -1,0 +1,36 @@
+__pycache__/
+*.pyc
+.venv/
+.venv-headroom/
+.eggs/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.env
+*.log
+cookie.txt
+gemini-export.json
+config.json
+
+# 可安全忽略：本地浏览器 Profile / 运行时状态
+chrome-profile/
+/var/lib/gemini-web2api/watchdog-state.json
+
+# 建议保留：仓库内源码与测试
+!export_gemini_cookie.py
+!gemini_cookie_watchdog.py
+!gemini-cookie-watchdog-runner.sh
+!cloud-login-export.sh
+!repair-gemini-web2api-cloud.sh
+!README.md
+!Makefile
+!pyproject.toml
+!tests/
+!gemini_export/
+
+# Optional: local Claude hook working files
+.claude/
+.tokensave

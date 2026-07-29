@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+HEADROOM_DIR="${HEADROOM_DIR:-/root/headroom}"
+HEADROOM_VENV="${HEADROOM_VENV:-$(pwd)/.venv-headroom}"
+
+if [[ ! -d "$HEADROOM_DIR" ]]; then
+  echo "HEADROOM_DIR not found: $HEADROOM_DIR" >&2
+  echo "Set HEADROOM_DIR to the local headroom checkout, then retry." >&2
+  exit 1
+fi
+
+if [[ -d "$HEADROOM_VENV" ]]; then
+  python="$HEADROOM_VENV/bin/python"
+else
+  python="python3"
+fi
+
+export PYTHONPATH="$HEADROOM_DIR${PYTHONPATH:+:$PYTHONPATH}"
+cd "$HEADROOM_DIR"
+exec "$python" -m headroom "$@"
