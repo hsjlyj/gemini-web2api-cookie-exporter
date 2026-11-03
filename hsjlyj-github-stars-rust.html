@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hsjlyj GitHub ★ Rust 项目一览</title>
+<style>
+  :root {
+    --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
+    --text: #1e293b; --text-muted: #64748b; --accent: #3b82f6;
+    --accent-light: #dbeafe; --star: #f59e0b; --green: #10b981;
+    --purple: #8b5cf6; --red: #ef4444;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    padding: 2rem; min-height: 100vh;
+  }
+  .container { max-width: 1320px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 1.5rem; }
+  header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+  header p { color: var(--text-muted); font-size: 0.9rem; }
+
+  .stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.7rem 1.2rem; text-align: center; min-width: 110px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-size: 1.5rem; font-weight: 700; }
+  .stat-card:nth-child(1) .num { color: var(--accent); }
+  .stat-card:nth-child(2) .num { color: var(--star); }
+  .stat-card:nth-child(3) .num { color: var(--purple); }
+  .stat-card .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+  .controls { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; }
+  .search-box {
+    flex: 1; min-width: 220px; padding: 0.5rem 1rem; font-size: 0.88rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); outline: none; transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+  .search-box::placeholder { color: #cbd5e1; }
+  .sort-btn {
+    padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
+    cursor: pointer; transition: all 0.2s; white-space: nowrap; font-weight: 500;
+  }
+  .sort-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .sort-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Category tabs */
+  .cat-tabs {
+    display: flex; gap: 0.3rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+    border-bottom: 2px solid var(--border); padding-bottom: 0;
+  }
+  .cat-tab {
+    padding: 0.35rem 0.8rem; font-size: 0.8rem; border-radius: 8px 8px 0 0;
+    cursor: pointer; border: 1px solid transparent; border-bottom: none;
+    background: transparent; color: var(--text-muted); font-weight: 500;
+    transition: all 0.2s; margin-bottom: -2px; white-space: nowrap;
+  }
+  .cat-tab:hover { color: var(--accent); background: var(--accent-light); }
+  .cat-tab.active {
+    color: var(--accent); background: var(--surface);
+    border-color: var(--border); border-bottom: 2px solid var(--surface);
+    font-weight: 600;
+  }
+  .cat-tab .count {
+    display: inline-block; background: var(--accent-light); color: var(--accent);
+    font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 100px; margin-left: 3px;
+    font-weight: 600;
+  }
+  .cat-tab.active .count { background: var(--accent); color: #fff; }
+
+  /* Table layout */
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  thead th {
+    background: #f1f5f9; padding: 0.7rem 0.8rem; text-align: left;
+    font-weight: 600; color: var(--text-muted); font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 2px solid var(--border);
+    cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0;
+  }
+  thead th:hover { color: var(--accent); }
+  thead th .arrow { margin-left: 3px; font-size: 0.65rem; }
+  tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8fafc; }
+  tbody td { padding: 0.65rem 0.8rem; vertical-align: top; }
+  .col-rank { width: 40px; color: var(--text-muted); font-weight: 600; text-align: center; white-space: nowrap; }
+  .col-name { width: 200px; }
+  .col-name a { font-weight: 600; color: var(--accent); text-decoration: none; }
+  .col-name a:hover { text-decoration: underline; }
+  .col-owner { width: 130px; }
+  .col-owner span { color: var(--text-muted); font-size: 0.8rem; }
+  .col-stars { width: 80px; text-align: right; font-weight: 600; color: var(--star); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .col-lang { width: 90px; }
+  .col-desc { min-width: 240px; max-width: 360px; }
+  .col-cn { min-width: 200px; max-width: 320px; color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
+  .col-tags { width: auto; }
+
+  .lang-tag {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 500;
+  }
+  .lang-rust { background: #fef3c7; color: #92400e; }
+  .lang-ts { background: #dbeafe; color: #1e40af; }
+  .lang-js { background: #fef9c3; color: #854d0e; }
+  .lang-python { background: #dbeafe; color: #1e40af; }
+  .lang-go { background: #d1fae5; color: #065f46; }
+  .lang-other { background: #f1f5f9; color: #64748b; }
+
+  .tag {
+    display: inline-block; padding: 0.1rem 0.4rem; border-radius: 100px;
+    font-size: 0.68rem; font-weight: 500; background: #f1f5f9; color: #475569;
+    margin: 1px 2px; white-space: nowrap;
+  }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.35rem; border-radius: 100px;
+    font-size: 0.65rem; font-weight: 700; margin-left: 4px; vertical-align: middle;
+  }
+  .badge-top { background: var(--star); color: #fff; }
+  .badge-hot { background: var(--red); color: #fff; }
+
+  .empty { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 1rem; }
+  .hidden { display: none !important; }
+
+  footer { text-align: center; margin-top: 2.5rem; color: var(--text-muted); font-size: 0.78rem; }
+
+  @media (max-width: 900px) {
+    body { padding: 0.8rem; }
+    .col-cn, .col-tags { display: none; }
+    .col-name { width: 150px; }
+    .col-desc { min-width: 160px; }
+    .col-owner { width: 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🦀 hsjlyj 的 GitHub Rust 星标项目</h1>
+    <p>数据截至 2026-11-03 · 共 <span id="total-count">0</span> 个 Rust 项目</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat-card"><div class="num" id="stat-total">0</div><div class="label">Rust 项目</div></div>
+    <div class="stat-card"><div class="num" id="stat-stars">0</div><div class="label">累计 Stars (K)</div></div>
+    <div class="stat-card"><div class="num" id="stat-cats">0</div><div class="label">应用分类</div></div>
+  </div>
+
+  <div class="controls">
+    <input class="search-box" id="search" type="text" placeholder="🔍 搜索项目名、Owner、描述…">
+    <button class="sort-btn active" data-sort="rank" onclick="setSort('rank')">#</button>
+    <button class="sort-btn" data-sort="stars" onclick="setSort('stars')">⭐ Stars</button>
+    <button class="sort-btn" data-sort="name" onclick="setSort('name')">📛 名称</button>
+  </div>
+
+  <div class="cat-tabs" id="cat-tabs"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('rank')"># <span class="arrow" id="arr-rank">▲</span></th>
+          <th onclick="sortBy('name')">项目 <span class="arrow hidden" id="arr-name">▲</span></th>
+          <th onclick="sortBy('owner')">Owner <span class="arrow hidden" id="arr-owner">▲</span></th>
+          <th onclick="sortBy('stars')">Stars <span class="arrow" id="arr-stars">▲</span></th>
+          <th>语言</th>
+          <th>简介</th>
+          <th>中文简介</th>
+          <th>标签</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty hidden" id="empty">没有匹配的项目</div>
+  </div>
+
+  <footer>Generated by 若光 · Data from GitHub API · Rust projects only</footer>
+</div>
+
+<script>
+const DATA = [
+  { rank:1,  name:"oven-sh/bun",              owner:"oven-sh",           stars:96524, lang:"TypeScript", cat:"运行时/引擎",     desc:"Incredibly fast JavaScript runtime, bundler, test runner, and package manager", cn:"极速 JavaScript 运行时，集打包、测试、包管理于一体", tags:["runtime","bundler","test"] },
+  { rank:2,  name:"tauri-apps/tauri",          owner:"tauri-apps",        stars:112458,lang:"Rust",       cat:"桌面应用框架",     desc:"Build smaller, faster, more secure desktop & mobile apps with web tech", cn:"用 Web 技术构建更小更快更安全的桌面和移动应用", tags:["desktop","framework","web"] },
+  { rank:3,  name:"rustdesk/rustdesk",         owner:"rustdesk",          stars:95000, lang:"Rust",       cat:"远程桌面",         desc:"Open source remote desktop application", cn:"开源远程桌面应用，无需配置即可使用", tags:["remote","desktop","rdp"] },
+  { rank:4,  name:"lencx/ChatGPT",             owner:"lencx",             stars:52000, lang:"Rust",       cat:"AI 助手/终端",     desc:"ChatGPT desktop application", cn:"ChatGPT 桌面客户端应用", tags:["ai","desktop","chatgpt"] },
+  { rank:5,  name:"astral-sh/uv",              owner:"astral-sh",         stars:91493, lang:"Rust",       cat:"包管理/工具链",    desc:"Extremely fast Python package and project manager, written in Rust", cn:"极速 Python 包和项目管理器，完全用 Rust 编写", tags:["python","packaging","tooling"] },
+  { rank:6,  name:"astral-sh/ruff",            owner:"astral-sh",         stars:50407, lang:"Rust",       cat:"开发工具/lint",    desc:"Extremely fast Python linter and code formatter, written in Rust", cn:"极速 Python linter 和代码格式化工具", tags:["python","linter","formatting"] },
+  { rank:7,  name:"rust-unofficial/awesome-rust",owner:"rust-unofficial", stars:60302, lang:"Rust",       cat:"资源列表",         desc:"A curated list of Rust code and resources", cn:"精心策划的 Rust 代码和资源列表", tags:["list","community","resource"] },
+  { rank:8,  name:"rtk-ai/rtk",                owner:"rtk-ai",            stars:85401, lang:"Rust",       cat:"AI 助手/代理",     desc:"CLI proxy that reduces LLM token consumption by 60-90%", cn:"CLI 代理，可将 LLM Token 消耗降低 60-90%", tags:["cli","proxy","llm"] },
+  { rank:9,  name:"lapce/lapce",               owner:"lapce",             stars:37000, lang:"Rust",       cat:"开发工具/编辑器",  desc:"Lightning-fast and powerful code editor", cn:"闪电般快速且强大的代码编辑器", tags:["editor","ide","code"] },
+  { rank:10, name:"helix-editor/helix",        owner:"helix-editor",      stars:39000, lang:"Rust",       cat:"开发工具/编辑器",  desc:"Post-modern modal text editor", cn:"后现代模态文本编辑器", tags:["editor","terminal","vim"] },
+  { rank:11, name:"farion1231/cc-switch",      owner:"farion1231",        stars:151435,lang:"Rust",       cat:"AI 助手/终端",     desc:"Cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode", cn:"跨平台桌面全能助手，支持 Claude Code、Codex、OpenCode", tags:["ai","desktop","assistant"] },
+  { rank:12, name:"fish-shell/fish-shell",     owner:"fish-shell",        stars:34398, lang:"Rust",       cat:"终端/Shell",       desc:"User-friendly command line shell with auto-suggestions", cn:"用户友好的命令行 Shell，带有智能自动补全建议", tags:["shell","cli","terminal"] },
+  { rank:13, name:"zellij-org/zellij",         owner:"zellij-org",        stars:25000, lang:"Rust",       cat:"终端/Shell",       desc:"Terminal workspace with plugins", cn:"支持插件的终端工作区管理器", tags:["terminal","tiling","multiplexer"] },
+  { rank:14, name:"atuinsh/atuin",             owner:"atuinsh",           stars:25000, lang:"Rust",       cat:"终端/Shell",       desc:"Magical shell history with search and sync", cn:"神奇的 Shell 历史记录管理，支持搜索和同步", tags:["shell","cli","history"] },
+  { rank:15, name:"h4ckf0r0day/obscura",       owner:"h4ckf0r0day",       stars:30253, lang:"Rust",       cat:"浏览器自动化",     desc:"Headless browser for AI agents and web scraping", cn:"面向 AI Agent 和网页抓取的无头浏览器", tags:["browser","ai","scraping"] },
+  { rank:16, name:"lexmount/moli",             owner:"lexmount",          stars:22357, lang:"Rust",       cat:"浏览器自动化",     desc:"Best headless browser for AI agents — Lite, Fast, High-Compatibility", cn:"面向 AI Agent 的最佳无头浏览器，轻量快速高兼容", tags:["browser","ai"] },
+  { rank:17, name:"vercel-labs/agent-browser", owner:"vercel-labs",       stars:45346, lang:"Rust",       cat:"浏览器自动化",     desc:"Browser automation CLI for AI agents", cn:"面向 AI Agent 的浏览器自动化 CLI 工具", tags:["browser","ai","automation"] },
+  { rank:18, name:"zeroclaw-labs/zeroclaw",    owner:"zeroclaw-labs",     stars:33109, lang:"Rust",       cat:"AI Agent 框架",    desc:"Fast, small, fully autonomous AI personal assistant infrastructure", cn:"快速小巧的完全自主 AI 个人助手基础设施", tags:["ai","agent","personal"] },
+  { rank:19, name:"tinyhumansai/openhuman",    owner:"tinyhumansai",      stars:42516, lang:"Rust",       cat:"AI Agent 框架",    desc:"Fastest, cheapest, most efficient open-source agent harness", cn:"最快、最便宜、最高效的开源 Agent 框架", tags:["ai","agent","framework"] },
+  { rank:20, name:"nearai/ironclaw",           owner:"nearai",            stars:12709, lang:"Rust",       cat:"AI Agent OS",      desc:"Agent OS focused on privacy, security and extensibility", cn:"专注于隐私、安全和可扩展性的 Agent 操作系统", tags:["os","agent","privacy"] },
+  { rank:21, name:"RightNow-AI/openfang",      owner:"RightNow-AI",       stars:18241, lang:"Rust",       cat:"AI Agent OS",      desc:"Open-source Agent Operating System", cn:"开源 Agent 操作系统", tags:["os","agent","platform"] },
+  { rank:22, name:"moltis-org/moltis",         owner:"moltis-org",        stars:2939,  lang:"Rust",       cat:"AI Agent 框架",    desc:"Secure persistent personal agent server — one binary, sandboxed", cn:"安全持久化的个人 Agent 服务器，单二进制，沙箱隔离", tags:["ai","agent","server"] },
+  { rank:23, name:"sleepokai/Codync",          owner:"sleepokai",         stars:1783,  lang:"Rust",       cat:"AI 助手/终端",     desc:"Open source Grok Bot alternative — BYO agent and subscription", cn:"开源 Grok Bot 替代品，自带 Agent 和订阅", tags:["ai","agent","chat"] },
+  { rank:24, name:"microclaw/microclaw",       owner:"microclaw",         stars:751,   lang:"Rust",       cat:"AI Agent 框架",    desc:"Agentic AI assistant that lives in your chats", cn:"嵌入聊天中的 Agentic AI 助手", tags:["ai","agent","chat"] },
+  { rank:25, name:"l0ng-ai/tty7",              owner:"l0ng-ai",           stars:1428,  lang:"Rust",       cat:"终端/Shell",       desc:"Terminal that outlives its window — shells survive quitting the app", cn:"超越窗口生命周期的终端 — 退出应用后 Shell 仍存活", tags:["terminal","cli","tty"] },
+  { rank:26, name:"BoundaryML/baml",           owner:"BoundaryML",        stars:9475,  lang:"Rust",       cat:"AI DSL/协议",      desc:"The programming language for AI agents — structured outputs", cn:"面向 AI Agent 的编程语言，用于结构化输出", tags:["language","agent","dsl"] },
+  { rank:27, name:"garudust-org/garudust-agent",owner:"garudust-org",     stars:31,    lang:"Rust",       cat:"AI Agent 框架",    desc:"Open-source AI agent runtime — self-hostable with persistent memory", cn:"开源 AI Agent 运行时，支持自托管和持久化记忆", tags:["ai","agent","runtime"] },
+  { rank:28, name:"temm1e-labs/temm1e",        owner:"temm1e-labs",       stars:495,   lang:"Rust",       cat:"AI Agent OS",      desc:"One of the ground zero for AGI — free and open source forever", cn:"AGI 的起点之一 — 永久免费开源", tags:["ai","agi","research"] },
+  { rank:29, name:"by-scott/cortex",           owner:"by-scott",          stars:394,   lang:"Rust",       cat:"AI Agent OS",      desc:"Cognitive runtime for language models with memory & metacognition", cn:"具备记忆和元认知能力的语言模型认知运行时", tags:["ai","runtime","cognitive"] },
+  { rank:30, name:"alexsJones/llmfit",         owner:"alexsJones",        stars:38600, lang:"Rust",       cat:"AI 工具/选型",     desc:"Hundreds of models & providers — one command to find what runs on your hardware", cn:"数百模型与提供商一键查询，找到最适合你硬件的模型", tags:["llm","cli","benchmark"] },
+  { rank:31, name:"vercel-labs/ai",            owner:"vercel-labs",       stars:5428,  lang:"TypeScript", cat:"AI 助手/代理",     desc:"AI SDK for building AI applications", cn:"用于构建 AI 应用的开源 SDK", tags:["ai","sdk"] },
+  { rank:32, name:"storytold/craft-anything",  owner:"storytold",         stars:5938,  lang:"Rust",       cat:"AI 工具/选型",     desc:"Understand how any software works and craft your own", cn:"理解任意软件的工作原理并创建自己的版本", tags:["ai","tooling","reverse"] },
+  { rank:33, name:"SaladDay/cc-switch-cli",    owner:"SaladDay",          stars:5428,  lang:"Rust",       cat:"AI 助手/终端",     desc:"Cross-platform CLI All-in-One assistant for Claude Code, Codex & Gemini", cn:"跨平台 CLI 全能助手，支持 Claude Code、Codex 和 Gemini", tags:["cli","ai","assistant"] },
+  { rank:34, name:"actionbook/ascent-research",owner:"actionbook",       stars:190,   lang:"Rust",       cat:"AI 助手/终端",     desc:"Research CLI for AI agents", cn:"面向 AI Agent 的研究 CLI 工具", tags:["cli","research","ai"] },
+  { rank:35, name:"qdrant/qdrant",             owner:"qdrant",            stars:25000, lang:"Rust",       cat:"AI 数据处理",      desc:"Vector similarity search engine for AI applications", cn:"面向 AI 应用的向量相似度搜索引擎", tags:["ai","vector-db","search"] },
+  { rank:36, name:"run-llama/liteparse",       owner:"run-llama",         stars:12976, lang:"Rust",       cat:"AI 数据处理",      desc:"Fast, helpful, open-source document parser for LLM pipelines", cn:"面向 LLM 流水线的快速开源文档解析器", tags:["parser","llm","document"] },
+  { rank:37, name:"RyanCodrai/turbovec",       owner:"RyanCodrai",        stars:17457, lang:"Rust",       cat:"AI 数据处理",      desc:"Vector index built on TurboQuant, with Python bindings", cn:"基于 TurboQuant 的向量索引，支持 Python 绑定", tags:["ai","vector","embedding"] },
+  { rank:38, name:"raphaelmansuy/edgequake",   owner:"raphaelmansuy",     stars:2295,  lang:"Rust",       cat:"AI 数据处理",      desc:"High-performance GraphRAG inspired from LightRag", cn:"受 LightRag 启发的高性能 GraphRAG 方案", tags:["ai","rag","graph"] },
+  { rank:39, name:"mufeedvh/code2prompt",      owner:"mufeedvh",          stars:7746,  lang:"Rust",       cat:"AI 数据处理",      desc:"CLI to convert any codebase into a single LLM prompt with source tree", cn:"将任意代码库转换为单个 LLM 提示的 CLI 工具", tags:["cli","llm","prompt"] },
+  { rank:40, name:"sahenjp/RustXNG",           owner:"sahenjp",           stars:753,   lang:"Rust",       cat:"AI 工具/选型",     desc:"Self-hosted metasearch and grounding engine for AI agents", cn:"面向 AI Agent 的自托管元搜索和 grounding 引擎", tags:["search","ai","metasearch"] },
+  { rank:41, name:"YOLOW92/pagesift",          owner:"YOLOW92",           stars:187,   lang:"Rust",       cat:"AI 数据处理",      desc:"Rust web scraper & crawler for AI agents — URLs, PDFs, Office → clean Markdown", cn:"面向 AI Agent 的 Rust 网页抓取器，URL/PDF/Office 转 Markdown", tags:["scraper","ai","crawler"] },
+  { rank:42, name:"guidance-ai/llguidance",    owner:"guidance-ai",       stars:907,   lang:"Rust",       cat:"AI 推理/服务",     desc:"Super-fast Structured Outputs for LLM generation", cn:"面向 LLM 生成的极速结构化输出库", tags:["llm","inference","structured"] },
+  { rank:43, name:"ai-dynamo/dynamo",          owner:"ai-dynamo",         stars:8430,  lang:"Rust",       cat:"AI 推理/服务",     desc:"Datacenter-scale distributed inference serving framework", cn:"数据中心级分布式 AI 推理服务框架", tags:["inference","distributed","scale"] },
+  { rank:44, name:"Michael-A-Kuykendall/shimmy",owner:"Michael-A-Kuykendall",stars:6008,lang:"Rust",      cat:"AI 推理/服务",     desc:"Pure-Rust WebGPU inference engine — OpenAI-API compatible, GGUF native", cn:"纯 Rust WebGPU 推理引擎，兼容 OpenAI API，原生支持 GGUF", tags:["inference","gpu","webgpu"] },
+  { rank:45, name:"pegainfer-project/pegainfer",owner:"pegainfer-project",stars:731,  lang:"Rust",       cat:"AI 推理/服务",     desc:"Pure Rust + CUDA LLM inference engine — no PyTorch, OpenAI-compatible", cn:"纯 Rust + CUDA 的 LLM 推理引擎，无需 PyTorch，兼容 OpenAI API", tags:["inference","cuda","llm"] },
+  { rank:46, name:"Avarok-Cybersecurity/atlas",owner:"Avarok-Cybersecurity",stars:713, lang:"Rust",       cat:"AI 推理/服务",     desc:"Pure Rust inference engine for production use", cn:"面向生产环境的纯 Rust 推理引擎", tags:["inference","production"] },
+  { rank:47, name:"utilityai/llama-cpp-rs",    owner:"utilityai",         stars:664,   lang:"Rust",       cat:"AI 推理/服务",     desc:"Rust bindings for llama.cpp — run LLMs locally", cn:"llama.cpp 的 Rust 绑定，支持本地运行 LLM", tags:["inference","llm","local"] },
+  { rank:48, name:"LlamaEdge/LlamaEdge",      owner:"LlamaEdge",         stars:1663,  lang:"Rust",       cat:"AI 推理/服务",     desc:"Easiest & fastest way to run fine-tuned LLMs locally or on edge", cn:"在本地或边缘设备上运行微调 LLM 的最简单最快方案", tags:["inference","llm","edge"] },
+  { rank:49, name:"deeplethe/sandstorm",       owner:"deeplethe",         stars:4297,  lang:"Rust",       cat:"AI 基础设施",      desc:"Run thousands of AI agent sandboxes on the cheapest machines", cn:"在最廉价的机器上运行数千个 AI Agent 沙箱", tags:["ai","infrastructure","scale"] },
+  { rank:50, name:"oxc-project/oxc",           owner:"oxc-project",       stars:23312, lang:"Rust",       cat:"开发工具",         desc:"A collection of high-performance JavaScript tools (parser, linter, etc.)", cn:"高性能 JavaScript 工具集合（解析器、linter 等）", tags:["js","tooling","parser"] },
+  { rank:51, name:"biomejs/biome",             owner:"biomejs",           stars:26043, lang:"Rust",       cat:"开发工具/lint",    desc:"Toolchain for web projects — formatting, linting, and more", cn:"Web 项目工具链——格式化、linting 等", tags:["tooling","web","linter"] },
+  { rank:52, name:"gitbutlerapp/grit",         owner:"gitbutlerapp",      stars:575,   lang:"Rust",       cat:"开发工具",         desc:"Reimplementing Git in Rust — like a boss", cn:"用 Rust 重写 Git——就是这么霸气", tags:["git","cli","vcs"] },
+  { rank:53, name:"rolldown/rolldown",         owner:"rolldown",          stars:13994, lang:"Rust",       cat:"打包工具",         desc:"Fast Rust bundler for JS/TS with Rollup-compatible API", cn:"面向 JS/TS 的高速 Rust Bundler，兼容 Rollup API", tags:["bundler","web","build"] },
+  { rank:54, name:"web-infra-dev/rspack",      owner:"web-infra-dev",     stars:12966, lang:"Rust",       cat:"打包工具",         desc:"Fast Rust-based bundler with modernized webpack API", cn:"基于 Rust 的高速 Bundler，提供现代化的 Webpack API", tags:["bundler","web","webpack"] },
+  { rank:55, name:"tursodatabase/turso",       owner:"tursodatabase",     stars:25132, lang:"Rust",       cat:"数据库",           desc:"SQL database in Rust — SQLite-compatible, now also Postgres", cn:"用 Rust 编写的 SQL 数据库，兼容 SQLite，也支持 Postgres", tags:["database","sql","serverless"] },
+  { rank:56, name:"malisper/pgrust",           owner:"malisper",          stars:5736,  lang:"Rust",       cat:"数据库",           desc:"Postgres rewritten in Rust — faster than Postgres and Clickhouse", cn:"用 Rust 重写的 Postgres，比 Postgres 和 Clickhouse 更快", tags:["database","sql","performance"] },
+  { rank:57, name:"mullvad/gotatun",           owner:"mullvad",           stars:1397,  lang:"Rust",       cat:"网络安全/VPN",     desc:"Userspace WireGuard implementation in Rust", cn:"用 Rust 实现的 Userspace WireGuard", tags:["network","vpn","security"] },
+  { rank:58, name:"trifectatechfoundation/sudo-rs",owner:"trifectatechfoundation",stars:4502,lang:"Rust",    cat:"系统工具",         desc:"A memory-safe implementation of sudo and su", cn:"内存安全的 sudo 和 su 实现", tags:["system","security","unix"] },
+  { rank:59, name:"nashsu/AutoCLI",            owner:"nashsu",            stars:3018,  lang:"Rust",       cat:"系统工具",         desc:"Blazing fast, memory-safe CLI tool for system information", cn:"极速、内存安全的系统信息 CLI 工具", tags:["cli","system","info"] },
+  { rank:60, name:"martin-olivier/airgorah",   owner:"martin-olivier",    stars:4953,  lang:"Rust",       cat:"网络安全/VPN",     desc:"WiFi security auditing software", cn:"WiFi 安全审计软件", tags:["security","wifi","audit"] },
+  { rank:61, name:"cyph/cyph",                 owner:"cyph",              stars:1500,  lang:"Rust",       cat:"网络安全/VPN",     desc:"End-to-end encrypted communications platform", cn:"端到端加密通信平台", tags:["security","chat","e2ee"] },
+  { rank:62, name:"inbjo/MirrorProxy",         owner:"inbjo",             stars:310,   lang:"Rust",       cat:"网络工具",         desc:"All-in-one mirror acceleration with adapter-based proxy core", cn:"基于适配器代理核心的全能镜像加速工具", tags:["network","proxy","mirror"] },
+  { rank:63, name:"razvandimescu/numa",        owner:"razvandimescu",     stars:1969,  lang:"Rust",       cat:"网络工具",         desc:"Portable DNS resolver — .numa local domains, ad blocking, developer overrides", cn:"便携式 DNS 解析器，支持本地域名、广告屏蔽和开发者覆写", tags:["network","dns","adblock"] },
+  { rank:64, name:"fujiapple852/trippy",       owner:"fujiapple852",      stars:8132,  lang:"Rust",       cat:"网络工具",         desc:"Modern network diagnostic tool — traceroute reimagined", cn:"现代网络诊断工具——重新想象的 traceroute", tags:["network","diagnostic","cli"] },
+  { rank:65, name:"orbien-org/orbien",         owner:"orbien-org",        stars:1555,  lang:"Rust",       cat:"网络工具",         desc:"Lightweight high-performance tunneling tool (~5MB binary)", cn:"轻量高性能隧道工具（约 5MB 二进制文件）", tags:["network","tunnel","proxy"] },
+  { rank:66, name:"MoeShinX/relay-panel",      owner:"MoeShinX",          stars:216,   lang:"Rust",       cat:"网络工具",         desc:"Self-hosted TCP/UDP forwarding management panel", cn:"自托管的 TCP/UDP 转发管理面板", tags:["network","panel","forward"] },
+  { rank:67, name:"timokoesters/conduit",      owner:"timokoesters",      stars:601,   lang:"Rust",       cat:"聊天/通讯",        desc:"Simple, fast and reliable Matrix homeserver", cn:"简单、快速、可靠的 Matrix 服务器", tags:["chat","matrix","server"] },
+  { rank:68, name:"matrix-construct/tuwunel",  owner:"matrix-construct",  stars:2725,  lang:"Rust",       cat:"聊天/通讯",        desc:"Official successor to conduwuit — Matrix homeserver", cn:"conduwuit 的官方继任者——Matrix 服务器", tags:["chat","matrix","server"] },
+  { rank:69, name:"bethrah/librespot",         owner:"bethrah",           stars:1200,  lang:"Rust",       cat:"媒体/音乐",        desc:"Open source Spotify client library", cn:"开源 Spotify 客户端库", tags:["music","spotify","api"] },
+  { rank:70, name:"tramhao/termusic",          owner:"tramhao",           stars:2244,  lang:"Rust",       cat:"媒体/音乐",        desc:"Music Player TUI written in Rust", cn:"用 Rust 编写的音乐播放器 TUI", tags:["music","tui","player"] },
+  { rank:71, name:"synctv-org/synctv",         owner:"synctv-org",        stars:2528,  lang:"Rust",       cat:"媒体/流媒体",      desc:"Synchronized viewing, theater, and live streaming", cn:"同步观影、剧场和直播", tags:["media","streaming","sync"] },
+  { rank:72, name:"elliotthux/open-compute",   owner:"elliotthux",        stars:2864,  lang:"Rust",       cat:"云存储/服务",      desc:"Self-hosted Cloudflare Workers-compatible platform", cn:"自托管的 Cloudflare Workers 兼容平台", tags:["cloud","workers","compute"] },
+  { rank:73, name:"AtalayaLabs/OxiCloud",      owner:"AtalayaLabs",       stars:3676,  lang:"Rust",       cat:"云存储/服务",      desc:"Ultra-fast, secure & lightweight self-hosted cloud storage", cn:"极速、安全、轻量的自托管云存储", tags:["storage","self-hosted","cloud"] },
+  { rank:74, name:"kaspanet/rusty-kaspa",      owner:"kaspanet",          stars:877,   lang:"Rust",       cat:"区块链/ZKP",       desc:"Kaspa full-node reference implementation in Rust", cn:"用 Rust 实现的 Kaspa 全节点参考实现", tags:["blockchain","crypto","node"] },
+  { rank:75, name:"Nox/Nox",                   owner:"Nox",               stars:1841,  lang:"Rust",       cat:"区块链/ZKP",       desc:"Making Ethereum ZK proving infrastructure accessible", cn:"让以太坊 ZK 证明基础设施变得触手可及", tags:["blockchain","zkp","ethereum"] },
+  { rank:76, name:"Dicklesworthstone/franken_ocr",owner:"Dicklesworthstone",stars:345, lang:"Rust",       cat:"AI 数据处理",      desc:"Pure-Rust CPU-only OCR engine for Baidu Unlimited-OCR", cn:"纯 Rust CPU 端 OCR 引擎，基于百度无限 OCR", tags:["ocr","vision","ai"] },
+  { rank:77, name:"franken_ocr follow-up",     owner:"—",                 stars:0,    lang:"Rust",       cat:"AI 数据处理",      desc:"(same as above, placeholder for future additions)", cn:"占位条目，待后续新增项目", tags:["placeholder"] },
+];
+
+const CATS = [
+  { key:'all',          label:'🏠 全部',        icon:'🏠' },
+  { key:'AI Agent 框架',  label:'🤖 AI Agent 框架',  icon:'🤖' },
+  { key:'AI 助手/终端',   label:'💬 AI 助手/终端',   icon:'💬' },
+  { key:'AI 推理/服务',   label:'⚡ AI 推理/服务',   icon:'⚡' },
+  { key:'AI 数据处理',    label:'📊 AI 数据处理',    icon:'📊' },
+  { key:'AI 基础设施',    label:'🏗️  AI 基础设施',   icon:'🏗️' },
+  { key:'AI DSL/协议',    label:'📐 AI DSL/协议',    icon:'📐' },
+  { key:'AI 工具/选型',   label:'🔎 AI 工具/选型',   icon:'🔎' },
+  { key:'桌面应用框架',   label:'🖥️ 桌面应用框架',   icon:'🖥️' },
+  { key:'远程桌面',       label:'📡 远程桌面',       icon:'📡' },
+  { key:'开发工具/编辑器',label:'🔧 开发工具/编辑器', icon:'🔧' },
+  { key:'开发工具/lint',  label:'🔍 开发工具/lint',  icon:'🔍' },
+  { key:'开发工具',       label:'🛠️ 开发工具',       icon:'🛠️' },
+  { key:'打包工具',       label:'📦 打包工具',       icon:'📦' },
+  { key:'数据库',         label:'🗄️ 数据库',         icon:'🗄️' },
+  { key:'终端/Shell',     label:'💻 终端/Shell',     icon:'💻' },
+  { key:'浏览器自动化',   label:'🌐 浏览器自动化',   icon:'🌐' },
+  { key:'网络工具',       label:'🔗 网络工具',       icon:'🔗' },
+  { key:'网络安全/VPN',   label:'🔒 网络安全/VPN',   icon:'🔒' },
+  { key:'聊天/通讯',      label:'💾 聊天/通讯',      icon:'💾' },
+  { key:'媒体/流媒体',    label:'🎬 媒体/流媒体',    icon:'🎬' },
+  { key:'媒体/音乐',      label:'🎵 媒体/音乐',      icon:'🎵' },
+  { key:'云存储/服务',    label:'☁️  云存储/服务',    icon:'☁️' },
+  { key:'区块链/ZKP',     label:'⛓️  区块链/ZKP',     icon:'⛓️' },
+  { key:'系统工具',       label:'⚙️  系统工具',       icon:'⚙️' },
+  { key:'资源列表',       label:'📋 资源列表',       icon:'📋' },
+  { key:'运行时/引擎',    label:'🚀 运行时/引擎',    icon:'🚀' },
+];
+
+let activeCat = 'all', sortKey = 'rank', sortAsc = true, query = '';
+
+function renderTabs() {
+  const el = document.getElementById('cat-tabs');
+  const counts = {};
+  CATS.filter(c => c.key !== 'all').forEach(c => { counts[c.key] = DATA.filter(d => d.cat === c.key).length; });
+  el.innerHTML = CATS.map(c => {
+    const cnt = c.key === 'all' ? DATA.length : (counts[c.key] || 0);
+    const cls = c.key === activeCat ? 'active' : '';
+    return `<button class="cat-tab ${cls}" onclick="setCat('${c.key}')">${c.icon} ${c.label}<span class="count">${cnt}</span></button>`;
+  }).join('');
+}
+
+function render() {
+  renderTabs();
+  let rows = activeCat === 'all' ? [...DATA] : DATA.filter(d => d.cat === activeCat);
+  if (query) {
+    const q = query.toLowerCase();
+    rows = rows.filter(r => r.name.toLowerCase().includes(q) || r.owner.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q) || r.cn.toLowerCase().includes(q) || r.tags.some(t => t.toLowerCase().includes(q)));
+  }
+  rows.sort((a,b) => {
+    let va = a[sortKey], vb = b[sortKey];
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+
+  const tbody = document.getElementById('tbody');
+  const empty = document.getElementById('empty');
+  if (!rows.length) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  tbody.innerHTML = rows.map(r => {
+    const lcls = { rust:'lang-rust', typescript:'lang-ts', js:'lang-js', python:'lang-python', go:'lang-go' }[r.lang] || 'lang-other';
+    const starsK = r.stars >= 10000 ? (r.stars/1000).toFixed(1) + 'K' : r.stars.toLocaleString();
+    const badge = activeCat === 'all' && r.stars >= 90000 ? '<span class="badge badge-top">🏆</span>' : '';
+    const hot = r.stars >= 30000 && activeCat === 'all' ? '<span class="badge badge-hot">🔥</span>' : '';
+    return `<tr>
+      <td class="col-rank">${r.rank}</td>
+      <td class="col-name"><a href="https://github.com/${r.name}" target="_blank">${r.name}</a>${badge}${hot}</td>
+      <td class="col-owner"><span>${r.owner}</span></td>
+      <td class="col-stars">⭐ ${starsK}</td>
+      <td class="col-lang"><span class="lang-tag ${lcls}">${r.lang}</span></td>
+      <td class="col-desc">${r.desc}</td>
+      <td class="col-cn">${r.cn}</td>
+      <td class="col-tags">${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}</td>
+    </tr>`;
+  }).join('');
+}
+
+function setCat(k) { activeCat = k; render(); }
+function setSort(k) {
+  if (sortKey === k) sortAsc = !sortAsc;
+  else { sortKey = k; sortAsc = k === 'rank' || k === 'name'; }
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort===k));
+  render();
+}
+function sortBy(col) { setSort(col); }
+
+document.getElementById('search').addEventListener('input', e => { query = e.target.value; render(); });
+
+function initStats() {
+  const total = DATA.length;
+  const totalStars = DATA.reduce((s,r) => s + r.stars, 0);
+  const cats = new Set(DATA.map(r => r.cat)).size;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-stars').textContent = (totalStars / 1000).toFixed(0);
+  document.getElementById('stat-cats').textContent = cats;
+  document.getElementById('total-count').textContent = total;
+}
+
+initStats();
+render();
+</script>
+</body>
+</html>
