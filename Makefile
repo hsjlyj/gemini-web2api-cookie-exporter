@@ -1,5 +1,5 @@
 SELF_TEST_SRCS := export_gemini_cookie.py gemini_cookie_watchdog.py
-UNIT_TESTS := tests.test_gemini_export
+UNIT_TESTS := tests.test_gemini_export tests.test_common
 
 .PHONY: self-test unit-test test lint format
 

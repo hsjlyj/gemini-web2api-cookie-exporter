@@ -180,6 +180,13 @@ def self_test() -> int:
     assert extract_gemini_bl(html) == "boq_assistant-bard-web-server_20260714.01_p0"
     assert extract_auth_user("https://gemini.google.com/u/1/app/abc") == "1"
     assert extract_auth_user("https://gemini.google.com/app") is None
+
+    # 测试 extract_build_info
+    info = extract_build_info(html)
+    assert info["xsrf_token"] == "xsrf-demo"
+    assert info["build_label"] == "boq_assistant-bard-web-server_20260714.01_p0"
+    assert extract_build_info("") == {}
+
     cookie, names = select_cookie_string(
         [
             {"name": "SAPISID", "value": "secret-sapisid", "domain": ".google.com"},
@@ -189,6 +196,17 @@ def self_test() -> int:
     )
     assert cookie.startswith("SID=secret-sid; SAPISID=secret-sapisid")
     assert names == {"SID", "SAPISID"}
+
+    # 测试 __Secure- 系列 Cookie 排序
+    cookie2, names2 = select_cookie_string(
+        [
+            {"name": "__Secure-1PSID", "value": "secure-val", "domain": ".google.com"},
+            {"name": "SID", "value": "sid-val", "domain": ".google.com"},
+        ]
+    )
+    assert names2 == {"__Secure-1PSID", "SID"}
+    assert cookie2.index("SID") < cookie2.index("__Secure-1PSID")
+
     print("self-test: PASS")
     return 0
 

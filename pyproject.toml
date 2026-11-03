@@ -1,13 +1,15 @@
 [project]
 name = "gemini-web2api-cookie-exporter"
-version = "0.1.0"
+version = "0.2.0"
 description = "Export Gemini Web cookies and tokens for gemini-web2api."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "playwright>=1.44.0",
-    "headroom-ai[code]",
 ]
+
+[project.optional-dependencies]
+headroom = ["headroom-ai[code]"]
 
 [project.scripts]
 export-gemini-cookie = "export_gemini_cookie:main"

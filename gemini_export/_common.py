@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import re
 import shutil
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 try:
     from playwright.sync_api import Error as PlaywrightError
@@ -14,6 +17,28 @@ try:
 except ImportError:  # pragma: no cover
     PlaywrightError = RuntimeError  # type: ignore[assignment]
     sync_playwright = None  # type: ignore[assignment]
+
+
+__all__ = [
+    "AUTH_COOKIE_NAMES",
+    "MINIMUM_COOKIE_NAMES",
+    "PREFERRED_COOKIE_ORDER",
+    "GEMINI_URL",
+    "extract_xsrf_token",
+    "extract_gemini_bl",
+    "extract_auth_user",
+    "extract_build_info",
+    "select_cookie_string",
+    "write_secret_file",
+    "write_json_file",
+    "read_json_object",
+    "update_config",
+    "find_browser",
+    "build_launch_args",
+    "add_common_export_args",
+    "PlaywrightError",
+    "sync_playwright",
+]
 
 
 GEMINI_URL = "https://gemini.google.com/app"
@@ -55,6 +80,7 @@ PREFERRED_COOKIE_ORDER = [
 
 
 def extract_xsrf_token(html: str) -> str | None:
+    """从 Gemini 页面 HTML 中提取 XSRF token (SNlM0e)。"""
     patterns = (
         r'"SNlM0e"\s*:\s*"([^"\\]+)"',
         r'"SNlM0e"\s*,\s*"([^"\\]+)"',
@@ -70,6 +96,7 @@ def extract_xsrf_token(html: str) -> str | None:
 
 
 def extract_gemini_bl(html: str) -> str | None:
+    """从 Gemini 页面 HTML 中提取构建标识 (build label)。"""
     matches = re.findall(r"boq_assistant-bard-web-server_[A-Za-z0-9._-]+", html)
     if not matches:
         return None
@@ -77,19 +104,36 @@ def extract_gemini_bl(html: str) -> str | None:
 
 
 def extract_auth_user(url: str) -> str | None:
+    """从 Gemini URL 中提取用户 ID。"""
     match = re.search(r"gemini\.google\.com/u/(\d+)(?:/|$)", url)
     return match.group(1) if match else None
 
 
+def extract_build_info(html: str) -> dict[str, str]:
+    """从 Gemini 页面 HTML 中提取构建信息（SNlM0e + build label）。
+
+    用于调试和版本追踪，返回字典包含可用的字段。
+    """
+    info: dict[str, str] = {}
+    xsrf = extract_xsrf_token(html)
+    if xsrf:
+        info["xsrf_token"] = xsrf
+    bl = extract_gemini_bl(html)
+    if bl:
+        info["build_label"] = bl
+    return info
+
+
 def select_cookie_string(cookies: list[dict[str, Any]]) -> tuple[str, set[str]]:
+    """从 Playwright cookies 中筛选认证 Cookie 并按优先顺序排序。"""
     selected = {
         item["name"]: str(item.get("value", ""))
         for item in cookies
         if item.get("name") in AUTH_COOKIE_NAMES and item.get("value")
     }
-    ordered_names = [name for name in AUTH_COOKIE_NAMES if name in selected]
-    order = {name: index for index, name in enumerate(PREFERRED_COOKIE_ORDER)}
-    ordered_names.sort(key=lambda name: (order.get(name, len(order)), name))
+    # 按 PREFERRED_COOKIE_ORDER 排序，未列出的按名称排序排在后面
+    order = {name: idx for idx, name in enumerate(PREFERRED_COOKIE_ORDER)}
+    ordered_names = sorted(selected, key=lambda name: (order.get(name, len(order)), name))
     cookie_string = "; ".join(f"{name}={selected[name]}" for name in ordered_names)
     return cookie_string, set(selected)
 

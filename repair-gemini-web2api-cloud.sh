@@ -176,8 +176,17 @@ if needle not in s:
     s = s.replace(marker, marker + '      - ./cookie.txt:/app/cookie.txt:ro\n', 1)
     p.write_text(s, encoding='utf-8')
 PY
-    docker compose -f "$COMPOSE" config >/dev/null
-    docker compose -f "$COMPOSE" up -d --build
+     # 检测 Docker Compose 版本 (v1 vs v2)
+     if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+       DC="docker compose"
+     elif command -v docker-compose >/dev/null 2>&1; then
+       DC="docker-compose"
+     else
+       fail "未找到 docker compose 或 docker-compose 命令"
+     fi
+     log "检测到的 Compose 命令: $DC"
+    $DC -f "$COMPOSE" config >/dev/null
+    $DC -f "$COMPOSE" up -d --build
   else
     docker compose -f "$COMPOSE" config >/dev/null
   fi

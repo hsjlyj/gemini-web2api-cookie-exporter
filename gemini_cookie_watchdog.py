@@ -81,6 +81,7 @@ def collect_from_profile(args: argparse.Namespace) -> dict[str, Any]:
                     f"Gemini 登录态失效或被重定向，当前页面：{url[:180]}"
                 )
 
+            # 并行提取 HTML 中的 token 和构建信息
             html = page.content()
             xsrf_token = extract_xsrf_token(html)
             gemini_bl = extract_gemini_bl(html)
@@ -94,6 +95,12 @@ def collect_from_profile(args: argparse.Namespace) -> dict[str, Any]:
                 except PlaywrightError:
                     pass
 
+            logger.info(
+                "Cookie 刷新成功: %s, xsrf_token=%s, gemini_bl=%s",
+                ", ".join(cookie_names),
+                xsrf_token[:8] + "..." if xsrf_token else None,
+                gemini_bl,
+            )
             return {
                 "cookie_string": cookie_string,
                 "cookie_names": sorted(cookie_names),
