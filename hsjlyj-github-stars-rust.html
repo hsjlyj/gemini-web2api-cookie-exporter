@@ -5,267 +5,295 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>hsjlyj GitHub ★ Rust 项目一览</title>
 <style>
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  @keyframes floatUp {
+    0%   { opacity:0; transform:translateY(30px) scale(0.95); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
   }
   @keyframes shimmer {
-    0%   { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-6px); }
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
   }
   @keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50%      { opacity: 1; }
+    0%,100% { transform: scale(1); opacity:0.5; }
+    50%     { transform: scale(1.3); opacity:1; }
   }
-  @keyframes borderGlow {
-    0%, 100% { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 8px rgba(59,130,246,0.1); }
-    50%      { border-color: rgba(59,130,246,0.8); box-shadow: 0 0 20px rgba(59,130,246,0.25); }
+  @keyframes borderPulse {
+    0%,100% { border-color:rgba(59,130,246,0.2); box-shadow:0 0 6px rgba(59,130,246,0.05); }
+    50%     { border-color:rgba(59,130,246,0.7); box-shadow:0 0 25px rgba(59,130,246,0.2); }
   }
-  @keyframes gradientShift {
+  @keyframes gradientMove {
     0%   { background-position: 0% 50%; }
     50%  { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-  @keyframes starTwinkle {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50%      { opacity: 1; transform: scale(1.5); }
+  @keyframes twinkle {
+    0%,100% { opacity:0.2; transform:scale(1); }
+    50%     { opacity:1; transform:scale(1.8); }
   }
-  @keyframes rowSlideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to   { opacity: 1; transform: translateX(0); }
+  @keyframes slideIn {
+    0%   { opacity:0; transform:translateX(-30px); }
+    100% { opacity:1; transform:translateX(0); }
   }
-  @keyframes countUp {
-    from { opacity: 0; transform: scale(0.5); }
-    to   { opacity: 1; transform: scale(1); }
+  @keyframes popIn {
+    0%   { opacity:0; transform:scale(0.5); }
+    70%  { transform:scale(1.05); }
+    100% { opacity:1; transform:scale(1); }
   }
-  @keyframes rainbowText {
-    0%   { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
+  @keyframes rainbowShift {
+    0%   { filter:hue-rotate(0deg); }
+    100% { filter:hue-rotate(360deg); }
+  }
+  @keyframes glowPulse {
+    0%,100% { text-shadow:0 0 10px rgba(59,130,246,0.3), 0 0 20px rgba(139,92,246,0.2); }
+    50%     { text-shadow:0 0 20px rgba(59,130,246,0.6), 0 0 40px rgba(139,92,246,0.4); }
+  }
+  @keyframes rotate {
+    from { transform:rotate(0deg); }
+    to   { transform:rotate(360deg); }
+  }
+  @keyframes bounce {
+    0%,100% { transform:translateY(0); }
+    50%     { transform:translateY(-8px); }
+  }
+  @keyframes wave {
+    0%,100% { transform:translateY(0) skewX(0deg); }
+    25%     { transform:translateY(-3px) skewX(-1deg); }
+    75%     { transform:translateY(3px) skewX(1deg); }
+  }
+  @keyframes scanline {
+    0%   { top:-100%; }
+    100% { top:100%; }
   }
 
   :root {
-    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235;
-    --border: #1e293b; --border-hover: #334155;
-    --text: #e2e8f0; --text-muted: #94a3b8; --accent: #3b82f6;
-    --accent2: #8b5cf6; --star: #f59e0b; --green: #10b981;
-    --red: #ef4444; --pink: #ec4899; --cyan: #06b6d4;
-    --glow-blue: rgba(59,130,246,0.4);
-    --glow-purple: rgba(139,92,246,0.3);
+    --bg:#0a0e1a; --surface:#111827; --surface2:#1a2235;
+    --border:#1e293b; --border-h:#334155;
+    --text:#e2e8f0; --muted:#94a3b8;
+    --blue:#3b82f6; --purple:#8b5cf6; --cyan:#06b6d4;
+    --star:#f59e0b; --green:#10b981; --red:#ef4444; --pink:#ec4899;
+    --glow-b:rgba(59,130,246,0.35); --glow-p:rgba(139,92,246,0.25);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *{margin:0;padding:0;box-sizing:border-box}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.6;
-    min-height: 100vh; overflow-x: hidden;
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC',sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden;
     background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(6,182,212,0.04) 0%, transparent 50%);
+      radial-gradient(ellipse at 15% 50%,rgba(59,130,246,0.07),transparent 55%),
+      radial-gradient(ellipse at 85% 20%,rgba(139,92,246,0.06),transparent 55%),
+      radial-gradient(ellipse at 50% 90%,rgba(6,182,212,0.05),transparent 55%);
   }
 
-  /* 粒子背景 */
-  .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-  .particle {
-    position: absolute; border-radius: 50%; background: rgba(59,130,246,0.15);
-    animation: float linear infinite;
+  /* ===== 粒子背景 ===== */
+  .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .particle{
+    position:absolute;border-radius:50%;
+    animation:floatUp linear infinite alternate;
+  }
+  .particle.glow{
+    box-shadow:0 0 6px currentColor;
+    animation-name:floatUp,pulse;
+    animation-duration:var(--dur),var(--pdur);
+    animation-timing-function:linear,ease-in-out;
+    animation-iteration-count:infinite,infinite;
+    animation-direction:alternate,alternate;
   }
 
-  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
-
-  /* Header */
-  header { text-align: center; margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out; }
-  header h1 {
-    font-size: 2.2rem; margin-bottom: 0.4rem;
-    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--cyan), var(--accent));
-    background-size: 300% 300%;
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradientShift 6s ease infinite;
-  }
-  header .subtitle { color: var(--text-muted); font-size: 0.95rem; }
-  header .subtitle span { color: var(--star); font-weight: 600; }
-
-  /* 装饰星 */
-  .deco-star {
-    position: absolute; font-size: 1.2rem; opacity: 0.15; pointer-events: none;
-    animation: starTwinkle 3s ease-in-out infinite;
+  /* ===== 扫描线 ===== */
+  .scanline{
+    position:fixed;left:0;width:100%;height:3px;
+    background:linear-gradient(90deg,transparent,var(--blue),var(--purple),transparent);
+    opacity:0.12;z-index:999;pointer-events:none;
+    animation:scanline 6s linear infinite;
   }
 
-  /* Stats */
-  .stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-    padding: 1rem 1.5rem; text-align: center; min-width: 130px;
-    backdrop-filter: blur(10px);
-    animation: fadeInUp 0.6s ease-out both;
-    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-  }
-  .stat-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-    box-shadow: 0 8px 24px rgba(59,130,246,0.15);
-  }
-  .stat-card:nth-child(1) { animation-delay: 0.1s; }
-  .stat-card:nth-child(2) { animation-delay: 0.2s; }
-  .stat-card:nth-child(3) { animation-delay: 0.3s; }
-  .stat-card .num { font-size: 1.8rem; font-weight: 700; animation: countUp 0.8s ease-out both; }
-  .stat-card:nth-child(1) .num { color: var(--accent); text-shadow: 0 0 20px rgba(59,130,246,0.4); }
-  .stat-card:nth-child(2) .num { color: var(--star); text-shadow: 0 0 20px rgba(245,158,11,0.4); }
-  .stat-card:nth-child(3) .num { color: var(--accent2); text-shadow: 0 0 20px rgba(139,92,246,0.4); }
-  .stat-card .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .container{max-width:1440px;margin:0 auto;padding:2rem;position:relative;z-index:1}
 
-  /* Controls */
-  .controls { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; animation: fadeInUp 0.6s ease-out 0.3s both; }
-  .search-box {
-    flex: 1; min-width: 240px; padding: 0.6rem 1.2rem; font-size: 0.9rem;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    color: var(--text); outline: none; transition: all 0.3s;
-    backdrop-filter: blur(10px);
+  /* ===== Header ===== */
+  header{text-align:center;margin-bottom:2.5rem;animation:floatUp .8s ease-out}
+  header h1{
+    font-size:2.4rem;margin-bottom:.3rem;cursor:default;
+    background:linear-gradient(135deg,var(--blue),var(--purple),var(--cyan),var(--pink),var(--blue));
+    background-size:400% 400%;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:gradientMove 5s ease infinite,glowPulse 3s ease-in-out infinite;
   }
-  .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
-  .search-box::placeholder { color: #475569; }
-  .sort-btn {
-    padding: 0.45rem 1rem; font-size: 0.82rem; border-radius: 10px;
-    background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-    cursor: pointer; transition: all 0.3s; white-space: nowrap; font-weight: 500;
-    backdrop-filter: blur(10px);
-  }
-  .sort-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-  .sort-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-color: transparent; }
+  header .emoji-row{font-size:1.6rem;margin-bottom:.3rem;animation:bounce 2s ease-in-out infinite}
+  header .sub{color:var(--muted);font-size:.95rem}
+  header .sub span{color:var(--star);font-weight:700}
 
-  /* Category tabs */
-  .cat-tabs {
-    display: flex; gap: 0.3rem; margin-bottom: 1.5rem; flex-wrap: wrap;
-    border-bottom: 2px solid var(--border); padding-bottom: 0;
-    animation: fadeInUp 0.6s ease-out 0.4s both;
+  /* ===== Stats ===== */
+  .stats{display:flex;gap:1rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
+  .stat-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;
+    padding:1rem 1.5rem;text-align:center;min-width:130px;cursor:default;
+    animation:floatUp .6s ease-out both;transition:all .35s;
+    position:relative;overflow:hidden;
   }
-  .cat-tab {
-    padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 10px 10px 0 0;
-    cursor: pointer; border: 1px solid transparent; border-bottom: none;
-    background: transparent; color: var(--text-muted); font-weight: 500;
-    transition: all 0.25s; margin-bottom: -2px; white-space: nowrap;
+  .stat-card::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));
+    opacity:0;transition:opacity .3s;
   }
-  .cat-tab:hover { color: var(--accent); background: rgba(59,130,246,0.08); }
-  .cat-tab.active {
-    color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-color: transparent; font-weight: 600;
-    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
-  }
-  .cat-tab .count {
-    display: inline-block; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
-    font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 100px; margin-left: 4px;
-    font-weight: 600;
-  }
-  .cat-tab.active .count { background: rgba(255,255,255,0.25); color: #fff; }
+  .stat-card:hover::after{opacity:1}
+  .stat-card:hover{transform:translateY(-5px) scale(1.02);border-color:var(--blue);box-shadow:0 12px 30px rgba(59,130,246,0.15)}
+  .stat-card:nth-child(1){animation-delay:.1s}
+  .stat-card:nth-child(2){animation-delay:.2s}
+  .stat-card:nth-child(3){animation-delay:.3s}
+  .stat-card .num{font-size:1.8rem;font-weight:700;animation:popIn .6s ease-out both}
+  .stat-card:nth-child(1) .num{color:var(--blue);text-shadow:0 0 18px rgba(59,130,246,0.5)}
+  .stat-card:nth-child(2) .num{color:var(--star);text-shadow:0 0 18px rgba(245,158,11,0.5)}
+  .stat-card:nth-child(3) .num{color:var(--purple);text-shadow:0 0 18px rgba(139,92,246,0.5)}
+  .stat-card .label{font-size:.78rem;color:var(--muted);margin-top:.2rem}
 
-  /* Table */
-  .table-wrap {
-    overflow-x: auto; border-radius: 16px; border: 1px solid var(--border);
-    background: var(--surface); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    animation: fadeIn 0.8s ease-out 0.5s both;
+  /* ===== Controls ===== */
+  .controls{display:flex;gap:.5rem;margin-bottom:1.2rem;flex-wrap:wrap;align-items:center;animation:floatUp .6s ease-out .2s both}
+  .search-box{
+    flex:1;min-width:240px;padding:.55rem 1.1rem;font-size:.9rem;
+    background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);outline:none;transition:all .3s;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  thead th {
-    background: var(--surface2); padding: 0.8rem 1rem; text-align: left;
-    font-weight: 600; color: var(--text-muted); font-size: 0.72rem;
-    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border);
-    cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; z-index: 2;
-    transition: color 0.2s;
+  .search-box:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.18)}
+  .search-box::placeholder{color:#475569}
+  .search-icon{color:var(--muted);margin-right:.5rem;font-size:1rem}
+  .sort-btn{
+    padding:.42rem .95rem;font-size:.82rem;border-radius:10px;
+    background:var(--surface);border:1px solid var(--border);color:var(--muted);
+    cursor:pointer;transition:all .3s;white-space:nowrap;font-weight:500;
   }
-  thead th:hover { color: var(--accent); }
-  thead th .arrow { margin-left: 3px; font-size: 0.6rem; opacity: 0.5; }
-  thead th.sorted .arrow { opacity: 1; color: var(--accent); }
-  tbody tr {
-    border-bottom: 1px solid rgba(30,41,59,0.5);
-    transition: all 0.25s;
-    animation: rowSlideIn 0.4s ease-out both;
-  }
-  tbody tr:hover {
-    background: rgba(59,130,246,0.05);
-    box-shadow: inset 4px 0 0 var(--accent);
-  }
-  tbody tr:nth-child(even) { background: rgba(255,255,255,0.01); }
-  tbody tr:nth-child(even):hover { background: rgba(59,130,246,0.05); }
-  tbody td { padding: 0.65rem 0.9rem; vertical-align: top; }
-  .col-rank { width: 44px; text-align: center; font-weight: 700; color: var(--text-muted); font-size: 0.85rem; }
-  .col-name { width: 210px; min-width: 160px; }
-  .col-name a { font-weight: 600; color: var(--accent); text-decoration: none; transition: color 0.2s; }
-  .col-name a:hover { color: var(--cyan); text-decoration: underline; }
-  .col-owner { width: 130px; }
-  .col-owner span { color: var(--text-muted); font-size: 0.8rem; }
-  .col-stars { width: 80px; text-align: right; font-weight: 700; color: var(--star); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .col-lang { width: 85px; }
-  .col-desc { min-width: 220px; max-width: 340px; color: var(--text-muted); font-size: 0.82rem; }
-  .col-cn { min-width: 200px; max-width: 320px; color: var(--green); font-size: 0.82rem; font-style: italic; opacity: 0.85; }
-  .col-tags { width: auto; white-space: nowrap; }
+  .sort-btn:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
+  .sort-btn.active{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border-color:transparent;box-shadow:0 4px 15px rgba(59,130,246,.3)}
 
-  .lang-tag {
-    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 100px;
-    font-size: 0.7rem; font-weight: 600;
+  /* ===== Category tabs ===== */
+  .cat-tabs{
+    display:flex;gap:.25rem;margin-bottom:1.4rem;flex-wrap:wrap;
+    border-bottom:2px solid var(--border);padding-bottom:0;
+    animation:floatUp .6s ease-out .3s both;
   }
-  .lang-rust { background: rgba(210,153,34,0.15); color: #f0c040; }
-  .lang-ts { background: rgba(59,130,246,0.15); color: #60a5fa; }
-  .lang-js { background: rgba(245,158,11,0.15); color: #fbbf24; }
-  .lang-python { background: rgba(59,130,246,0.12); color: #60a5fa; }
-  .lang-go { background: rgba(6,182,212,0.15); color: #22d3ee; }
-  .lang-other { background: rgba(100,116,139,0.12); color: #94a3b8; }
-
-  .tag {
-    display: inline-block; padding: 0.1rem 0.4rem; border-radius: 100px;
-    font-size: 0.65rem; font-weight: 500; background: rgba(255,255,255,0.05); color: var(--text-muted);
-    margin: 1px 2px; border: 1px solid rgba(255,255,255,0.06);
-    transition: all 0.2s;
+  .cat-tab{
+    padding:.35rem .8rem;font-size:.78rem;border-radius:10px 10px 0 0;
+    cursor:pointer;border:1px solid transparent;border-bottom:none;
+    background:transparent;color:var(--muted);font-weight:500;
+    transition:all .25s;margin-bottom:-2px;white-space:nowrap;user-select:none;
   }
-  .tag:hover { background: rgba(59,130,246,0.15); color: var(--accent); border-color: rgba(59,130,246,0.3); }
-
-  .badge {
-    display: inline-block; padding: 0.1rem 0.35rem; border-radius: 100px;
-    font-size: 0.62rem; font-weight: 700; margin-left: 4px; vertical-align: middle;
+  .cat-tab:hover{color:var(--blue);background:rgba(59,130,246,.08)}
+  .cat-tab.active{
+    color:#fff;background:linear-gradient(135deg,var(--blue),var(--purple));
+    border-color:transparent;font-weight:700;
+    box-shadow:0 4px 18px rgba(59,130,246,.35);
+    animation:borderPulse 2s ease-in-out infinite;
   }
-  .badge-top { background: linear-gradient(135deg, var(--star), #f97316); color: #fff; }
-  .badge-hot { background: linear-gradient(135deg, var(--red), var(--pink)); color: #fff; }
-
-  .empty { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; animation: fadeIn 0.5s; }
-  .empty::before { content: '🔍'; display: block; font-size: 2.5rem; margin-bottom: 0.8rem; }
-  .hidden { display: none !important; }
-
-  /* Footer glow line */
-  .footer-glow {
-    height: 1px; margin: 2.5rem 0 1rem;
-    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
-    opacity: 0.4;
+  .cat-tab .cnt{
+    display:inline-block;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);
+    font-size:.62rem;padding:0 0.3rem;border-radius:100px;margin-left:3px;font-weight:600;
   }
-  footer { text-align: center; color: var(--text-muted); font-size: 0.78rem; animation: fadeIn 1s ease-out 1s both; }
+  .cat-tab.active .cnt{background:rgba(255,255,255,.22);color:#fff}
 
-  /* 滚动条美化 */
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+  /* ===== Table ===== */
+  .table-wrap{
+    overflow-x:auto;border-radius:16px;border:1px solid var(--border);
+    background:var(--surface);box-shadow:0 8px 32px rgba(0,0,0,.35);
+    animation:floatUp .8s ease-out .4s both;position:relative;
+  }
+  /* 表头呼吸灯 */
+  thead th{
+    background:var(--surface2);padding:.75rem .9rem;text-align:left;
+    font-weight:700;color:var(--muted);font-size:.72rem;
+    text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);
+    cursor:pointer;user-select:none;white-space:nowrap;position:sticky;top:0;z-index:2;
+    transition:color .25s;
+  }
+  thead th:hover{color:var(--blue)}
+  thead th .arrow{margin-left:3px;font-size:.6rem;opacity:.4;transition:all .25s}
+  thead th.sorted .arrow{opacity:1;color:var(--blue)}
+
+  tbody tr{
+    border-bottom:1px solid rgba(30,41,59,.45);
+    transition:all .3s;
+    animation:slideIn .5s ease-out both;
+  }
+  tbody tr:hover{
+    background:rgba(59,130,246,.06)!important;
+    box-shadow:inset 4px 0 0 var(--blue),0 0 15px rgba(59,130,246,.08);
+  }
+  tbody tr:nth-child(even){background:rgba(255,255,255,.008)}
+  tbody tr:nth-child(even):hover{background:rgba(59,130,246,.06)!important}
+
+  td{padding:.6rem .85rem;vertical-align:top}
+  .col-rank{width:44px;text-align:center;font-weight:700;color:var(--muted);font-size:.85rem}
+  .col-name{width:210px;min-width:150px}
+  .col-name a{font-weight:700;color:var(--blue);text-decoration:none;transition:all .25s;position:relative}
+  .col-name a::after{content:' ↗';font-size:.7rem;opacity:0;transition:opacity .2s}
+  .col-name a:hover{color:var(--cyan);text-decoration:none}
+  .col-name a:hover::after{opacity:.7}
+  .col-owner{width:130px}
+  .col-owner span{color:var(--muted);font-size:.8rem}
+  .col-stars{width:80px;text-align:right;font-weight:700;color:var(--star);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .col-lang{width:85px}
+  .col-desc{min-width:210px;max-width:340px;color:var(--muted);font-size:.82rem;line-height:1.45}
+  .col-cn{min-width:190px;max-width:310px;color:var(--green);font-size:.82rem;font-style:italic;opacity:.85;line-height:1.45}
+  .col-tags{width:auto;white-space:nowrap}
+
+  /* 加载时闪烁 */
+  tbody tr td { animation: fadeIn 0.4s ease-out both; }
+
+  .lang-tag{
+    display:inline-block;padding:.1rem .4rem;border-radius:100px;
+    font-size:.68rem;font-weight:600;
+  }
+  .lang-rust{background:rgba(210,153,34,.15);color:#f0c040}
+  .lang-ts{background:rgba(59,130,246,.14);color:#60a5fa}
+  .lang-js{background:rgba(245,158,11,.14);color:#fbbf24}
+  .lang-python{background:rgba(59,130,246,.1);color:#60a5fa}
+  .lang-go{background:rgba(6,182,212,.14);color:#22d3ee}
+  .lang-other{background:rgba(100,116,139,.1);color:#94a3b8}
+
+  .tag{
+    display:inline-block;padding:.08rem .35rem;border-radius:100px;
+    font-size:.63rem;font-weight:500;background:rgba(255,255,255,.04);color:var(--muted);
+    margin:1px 2px;border:1px solid rgba(255,255,255,.05);transition:all .2s;
+  }
+  .tag:hover{background:rgba(59,130,246,.14);color:var(--blue);border-color:rgba(59,130,246,.25)}
+
+  .badge{display:inline-block;padding:.08rem .3rem;border-radius:100px;font-size:.6rem;font-weight:700;margin-left:4px;vertical-align:middle}
+  .badge-top{background:linear-gradient(135deg,var(--star),#f97316);color:#fff}
+  .badge-hot{background:linear-gradient(135deg,var(--red),var(--pink));color:#fff;animation:pulse 2s ease-in-out infinite}
+
+  .empty{text-align:center;padding:4rem;color:var(--muted);font-size:1.1rem;animation:fadeIn .6s}
+  .empty::before{content:'🔍';display:block;font-size:2.5rem;margin-bottom:.8rem;animation:bounce 2s ease-in-out infinite}
+  .hidden{display:none!important}
+
+  /* 底部流光 */
+  .footer-line{
+    height:2px;margin:2.5rem 0 1rem;
+    background:linear-gradient(90deg,transparent 0%,var(--blue) 25%,var(--purple) 50%,var(--cyan) 75%,transparent 100%);
+    background-size:200% 100%;
+    animation:shimmer 4s linear infinite;
+    opacity:.5;
+  }
+  footer{text-align:center;color:var(--muted);font-size:.78rem;animation:fadeIn 1s ease-out .8s both}
+
+  /* 滚动条 */
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--border-h)}
 
   /* 响应式 */
-  @media (max-width: 900px) {
-    body { padding: 0.5rem; }
-    .container { padding: 1rem; }
-    header h1 { font-size: 1.5rem; }
-    .col-cn, .col-tags { display: none; }
-    .col-name { width: 130px; }
-    .col-desc { min-width: 120px; max-width: 180px; }
-    .col-owner { width: 90px; }
-    .stat-card { min-width: 90px; padding: 0.6rem 0.8rem; }
+  @media(max-width:900px){
+    body{padding:.5rem}
+    .container{padding:1rem}
+    header h1{font-size:1.5rem}
+    .col-cn,.col-tags{display:none}
+    .col-name{width:130px}
+    .col-desc{min-width:110px;max-width:170px}
+    .col-owner{width:85px}
+    .stat-card{min-width:90px;padding:.6rem .8rem}
   }
-  @media (max-width: 600px) {
-    .col-desc { display: none; }
-    header h1 { font-size: 1.2rem; }
+  @media(max-width:600px){
+    .col-desc{display:none}
+    header h1{font-size:1.2rem}
+    header .emoji-row{font-size:1.2rem}
   }
 </style>
 </head>
@@ -273,11 +301,14 @@
 
 <!-- 粒子背景 -->
 <div class="particles" id="particles"></div>
+<!-- 扫描线 -->
+<div class="scanline"></div>
 
 <div class="container">
   <header>
-    <h1>🦀 hsjlyj 的 GitHub Rust 星标项目</h1>
-    <p class="subtitle">数据截至 2026-11-03 · 共 <span id="total-count">0</span> 个 Rust 项目 · 累计 <span id="star-count">0</span> K Stars</p>
+    <div class="emoji-row">🦀 ⭐ 🚀</div>
+    <h1>hsjlyj 的 GitHub Rust 星标项目</h1>
+    <p class="sub">数据截至 2026-11-03 · 共 <span id="total-count">0</span> 个 Rust 项目 · 累计 <span id="star-count">0</span> K Stars</p>
   </header>
 
   <div class="stats">
@@ -296,8 +327,11 @@
   </div>
 
   <div class="controls">
-    <input class="search-box" id="search" type="text" placeholder="🔍 搜索项目名、Owner、描述、中文简介…">
-    <button class="sort-btn active" data-sort="rank" onclick="setSort('rank')">#</button>
+    <div style="position:relative;flex:1;min-width:220px">
+      <span class="search-icon">🔍</span>
+      <input class="search-box" id="search" type="text" placeholder="搜索项目名、Owner、描述、中文简介…">
+    </div>
+    <button class="sort-btn active" data-sort="rank" onclick="setSort('rank')"># 排序</button>
     <button class="sort-btn" data-sort="stars" onclick="setSort('stars')">⭐ Stars</button>
     <button class="sort-btn" data-sort="name" onclick="setSort('name')">📛 名称</button>
   </div>
@@ -309,8 +343,8 @@
       <thead>
         <tr>
           <th onclick="sortBy('rank')"># <span class="arrow" id="arr-rank">▲</span></th>
-          <th onclick="sortBy('name')">项目 <span class="arrow hidden" id="arr-name">▲</span></th>
-          <th onclick="sortBy('owner')">Owner <span class="arrow hidden" id="arr-owner">▲</span></th>
+          <th onclick="sortBy('name')">项目 <span class="arrow" id="arr-name">▲</span></th>
+          <th onclick="sortBy('owner')">Owner <span class="arrow" id="arr-owner">▲</span></th>
           <th onclick="sortBy('stars')">Stars <span class="arrow" id="arr-stars">▲</span></th>
           <th>语言</th>
           <th>简介</th>
@@ -323,231 +357,227 @@
     <div class="empty hidden" id="empty">没有匹配的项目</div>
   </div>
 
-  <div class="footer-glow"></div>
+  <div class="footer-line"></div>
   <footer>Generated by 若光 · Data from GitHub API · Rust projects only</footer>
 </div>
 
 <script>
-// ========== 粒子背景 ==========
-(function() {
-  const c = document.getElementById('particles');
-  const W = window.innerWidth, H = window.innerHeight;
-  const colors = ['rgba(59,130,246,', 'rgba(139,92,246,', 'rgba(6,182,212,', 'rgba(245,158,11,'];
-  for (let i = 0; i < 50; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    const size = Math.random() * 3 + 1;
-    const color = colors[Math.floor(Math.random() * colors.length)] + (Math.random() * 0.15 + 0.05) + ')';
-    p.style.cssText = `
-      width:${size}px; height:${size}px; background:${color};
-      left:${Math.random()*100}%; top:${Math.random()*100}%;
-      animation-duration:${Math.random()*20+10}s;
-      animation-delay:${Math.random()*10}s;
+/* ============ 粒子系统 ============ */
+!function(){
+  const box=document.getElementById('particles');
+  const COLORS=['rgba(59,130,246,','rgba(139,92,246,','rgba(6,182,212,','rgba(245,158,11,','rgba(236,72,153,'];
+  for(let i=0;i<60;i++){
+    const d=document.createElement('div');
+    d.className='particle glow';
+    const sz=Math.random()*3.5+1;
+    const dur=Math.random()*15+10;
+    const pdur=Math.random()*4+2;
+    const clr=COLORS[Math.floor(Math.random()*COLORS.length)]+(Math.random()*.18+.04)+')';
+    d.style.cssText=`
+      width:${sz}px;height:${sz}px;background:${clr};color:${clr};
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --dur:${dur}s;--pdur:${pdur}s;
+      animation-duration:${dur}s,${pdur}s;
+      animation-delay:${Math.random()*dur*-1}s,${Math.random()*pdur*-1}s;
     `;
-    c.appendChild(p);
+    box.appendChild(d);
   }
-})();
+}();
 
-// ========== 数据 ==========
-const DATA = [
-  { rank:1,  name:"oven-sh/bun",              owner:"oven-sh",           stars:96524, lang:"TypeScript", cat:"运行时/引擎",     desc:"Incredibly fast JavaScript runtime, bundler, test runner, and package manager", cn:"极速 JavaScript 运行时，集打包、测试、包管理于一体", tags:["runtime","bundler","test"] },
-  { rank:2,  name:"tauri-apps/tauri",          owner:"tauri-apps",        stars:112458,lang:"Rust",       cat:"桌面应用框架",     desc:"Build smaller, faster, more secure desktop & mobile apps with web tech", cn:"用 Web 技术构建更小更快更安全的桌面和移动应用", tags:["desktop","framework","web"] },
-  { rank:3,  name:"rustdesk/rustdesk",         owner:"rustdesk",          stars:95000, lang:"Rust",       cat:"远程桌面",         desc:"Open source remote desktop application", cn:"开源远程桌面应用，无需复杂配置即可使用", tags:["remote","desktop","rdp"] },
-  { rank:4,  name:"lencx/ChatGPT",             owner:"lencx",             stars:52000, lang:"Rust",       cat:"AI 助手/终端",     desc:"ChatGPT desktop application", cn:"ChatGPT 桌面客户端应用", tags:["ai","desktop","chatgpt"] },
-  { rank:5,  name:"astral-sh/uv",              owner:"astral-sh",         stars:91493, lang:"Rust",       cat:"包管理/工具链",    desc:"Extremely fast Python package and project manager, written in Rust", cn:"极速 Python 包和项目管理器，完全用 Rust 编写", tags:["python","packaging","tooling"] },
-  { rank:6,  name:"astral-sh/ruff",            owner:"astral-sh",         stars:50407, lang:"Rust",       cat:"开发工具/lint",    desc:"Extremely fast Python linter and code formatter, written in Rust", cn:"极速 Python linter 和代码格式化工具", tags:["python","linter","formatting"] },
-  { rank:7,  name:"rust-unofficial/awesome-rust",owner:"rust-unofficial", stars:60302, lang:"Rust",       cat:"资源列表",         desc:"A curated list of Rust code and resources", cn:"精心策划的 Rust 代码和资源列表", tags:["list","community","resource"] },
-  { rank:8,  name:"rtk-ai/rtk",                owner:"rtk-ai",            stars:85401, lang:"Rust",       cat:"AI 助手/代理",     desc:"CLI proxy that reduces LLM token consumption by 60-90%", cn:"CLI 代理，可将 LLM Token 消耗降低 60-90%", tags:["cli","proxy","llm"] },
-  { rank:9,  name:"lapce/lapce",               owner:"lapce",             stars:37000, lang:"Rust",       cat:"开发工具/编辑器",  desc:"Lightning-fast and powerful code editor", cn:"闪电般快速且强大的代码编辑器", tags:["editor","ide","code"] },
-  { rank:10, name:"helix-editor/helix",        owner:"helix-editor",      stars:39000, lang:"Rust",       cat:"开发工具/编辑器",  desc:"Post-modern modal text editor", cn:"后现代模态文本编辑器", tags:["editor","terminal","vim"] },
-  { rank:11, name:"farion1231/cc-switch",      owner:"farion1231",        stars:151435,lang:"Rust",       cat:"AI 助手/终端",     desc:"Cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode", cn:"跨平台桌面全能助手，支持 Claude Code、Codex、OpenCode", tags:["ai","desktop","assistant"] },
-  { rank:12, name:"fish-shell/fish-shell",     owner:"fish-shell",        stars:34398, lang:"Rust",       cat:"终端/Shell",       desc:"User-friendly command line shell with auto-suggestions", cn:"用户友好的命令行 Shell，带有智能自动补全建议", tags:["shell","cli","terminal"] },
-  { rank:13, name:"zellij-org/zellij",         owner:"zellij-org",        stars:25000, lang:"Rust",       cat:"终端/Shell",       desc:"Terminal workspace with plugins", cn:"支持插件的终端工作区管理器", tags:["terminal","tiling","multiplexer"] },
-  { rank:14, name:"atuinsh/atuin",             owner:"atuinsh",           stars:25000, lang:"Rust",       cat:"终端/Shell",       desc:"Magical shell history with search and sync", cn:"神奇的 Shell 历史记录管理，支持搜索和同步", tags:["shell","cli","history"] },
-  { rank:15, name:"h4ckf0r0day/obscura",       owner:"h4ckf0r0day",       stars:30253, lang:"Rust",       cat:"浏览器自动化",     desc:"Headless browser for AI agents and web scraping", cn:"面向 AI Agent 和网页抓取的无头浏览器", tags:["browser","ai","scraping"] },
-  { rank:16, name:"lexmount/moli",             owner:"lexmount",          stars:22357, lang:"Rust",       cat:"浏览器自动化",     desc:"Best headless browser for AI agents — Lite, Fast, High-Compatibility", cn:"面向 AI Agent 的最佳无头浏览器，轻量快速高兼容", tags:["browser","ai"] },
-  { rank:17, name:"vercel-labs/agent-browser", owner:"vercel-labs",       stars:45346, lang:"Rust",       cat:"浏览器自动化",     desc:"Browser automation CLI for AI agents", cn:"面向 AI Agent 的浏览器自动化 CLI 工具", tags:["browser","ai","automation"] },
-  { rank:18, name:"zeroclaw-labs/zeroclaw",    owner:"zeroclaw-labs",     stars:33109, lang:"Rust",       cat:"AI Agent 框架",    desc:"Fast, small, fully autonomous AI personal assistant infrastructure", cn:"快速小巧的完全自主 AI 个人助手基础设施", tags:["ai","agent","personal"] },
-  { rank:19, name:"tinyhumansai/openhuman",    owner:"tinyhumansai",      stars:42516, lang:"Rust",       cat:"AI Agent 框架",    desc:"Fastest, cheapest, most efficient open-source agent harness", cn:"最快、最便宜、最高效的开源 Agent 框架", tags:["ai","agent","framework"] },
-  { rank:20, name:"nearai/ironclaw",           owner:"nearai",            stars:12709, lang:"Rust",       cat:"AI Agent OS",      desc:"Agent OS focused on privacy, security and extensibility", cn:"专注于隐私、安全和可扩展性的 Agent 操作系统", tags:["os","agent","privacy"] },
-  { rank:21, name:"RightNow-AI/openfang",      owner:"RightNow-AI",       stars:18241, lang:"Rust",       cat:"AI Agent OS",      desc:"Open-source Agent Operating System", cn:"开源 Agent 操作系统", tags:["os","agent","platform"] },
-  { rank:22, name:"moltis-org/moltis",         owner:"moltis-org",        stars:2939,  lang:"Rust",       cat:"AI Agent 框架",    desc:"Secure persistent personal agent server — one binary, sandboxed", cn:"安全持久化的个人 Agent 服务器，单二进制，沙箱隔离", tags:["ai","agent","server"] },
-  { rank:23, name:"sleepokai/Codync",          owner:"sleepokai",         stars:1783,  lang:"Rust",       cat:"AI 助手/终端",     desc:"Open source Grok Bot alternative — BYO agent and subscription", cn:"开源 Grok Bot 替代品，自带 Agent 和订阅", tags:["ai","agent","chat"] },
-  { rank:24, name:"microclaw/microclaw",       owner:"microclaw",         stars:751,   lang:"Rust",       cat:"AI Agent 框架",    desc:"Agentic AI assistant that lives in your chats", cn:"嵌入聊天中的 Agentic AI 助手", tags:["ai","agent","chat"] },
-  { rank:25, name:"l0ng-ai/tty7",              owner:"l0ng-ai",           stars:1428,  lang:"Rust",       cat:"终端/Shell",       desc:"Terminal that outlives its window — shells survive quitting the app", cn:"超越窗口生命周期的终端 — 退出应用后 Shell 仍存活", tags:["terminal","cli","tty"] },
-  { rank:26, name:"BoundaryML/baml",           owner:"BoundaryML",        stars:9475,  lang:"Rust",       cat:"AI DSL/协议",      desc:"The programming language for AI agents — structured outputs", cn:"面向 AI Agent 的编程语言，用于结构化输出", tags:["language","agent","dsl"] },
-  { rank:27, name:"garudust-org/garudust-agent",owner:"garudust-org",     stars:31,    lang:"Rust",       cat:"AI Agent 框架",    desc:"Open-source AI agent runtime — self-hostable with persistent memory", cn:"开源 AI Agent 运行时，支持自托管和持久化记忆", tags:["ai","agent","runtime"] },
-  { rank:28, name:"temm1e-labs/temm1e",        owner:"temm1e-labs",       stars:495,   lang:"Rust",       cat:"AI Agent OS",      desc:"One of the ground zero for AGI — free and open source forever", cn:"AGI 的起点之一 — 永久免费开源", tags:["ai","agi","research"] },
-  { rank:29, name:"by-scott/cortex",           owner:"by-scott",          stars:394,   lang:"Rust",       cat:"AI Agent OS",      desc:"Cognitive runtime for language models with memory & metacognition", cn:"具备记忆和元认知能力的语言模型认知运行时", tags:["ai","runtime","cognitive"] },
-  { rank:30, name:"alexsJones/llmfit",         owner:"alexsJones",        stars:38600, lang:"Rust",       cat:"AI 工具/选型",     desc:"Hundreds of models & providers — one command to find what runs on your hardware", cn:"数百模型与提供商一键查询，找到最适合你硬件的模型", tags:["llm","cli","benchmark"] },
-  { rank:31, name:"vercel-labs/ai",            owner:"vercel-labs",       stars:5428,  lang:"TypeScript", cat:"AI 助手/代理",     desc:"AI SDK for building AI applications", cn:"用于构建 AI 应用的开源 SDK", tags:["ai","sdk"] },
-  { rank:32, name:"storytold/craft-anything",  owner:"storytold",         stars:5938,  lang:"Rust",       cat:"AI 工具/选型",     desc:"Understand how any software works and craft your own", cn:"理解任意软件的工作原理并创建自己的版本", tags:["ai","tooling","reverse"] },
-  { rank:33, name:"SaladDay/cc-switch-cli",    owner:"SaladDay",          stars:5428,  lang:"Rust",       cat:"AI 助手/终端",     desc:"Cross-platform CLI All-in-One assistant for Claude Code, Codex & Gemini", cn:"跨平台 CLI 全能助手，支持 Claude Code、Codex 和 Gemini", tags:["cli","ai","assistant"] },
-  { rank:34, name:"actionbook/ascent-research",owner:"actionbook",       stars:190,   lang:"Rust",       cat:"AI 助手/终端",     desc:"Research CLI for AI agents", cn:"面向 AI Agent 的研究 CLI 工具", tags:["cli","research","ai"] },
-  { rank:35, name:"qdrant/qdrant",             owner:"qdrant",            stars:25000, lang:"Rust",       cat:"AI 数据处理",      desc:"Vector similarity search engine for AI applications", cn:"面向 AI 应用的向量相似度搜索引擎", tags:["ai","vector-db","search"] },
-  { rank:36, name:"run-llama/liteparse",       owner:"run-llama",         stars:12976, lang:"Rust",       cat:"AI 数据处理",      desc:"Fast, helpful, open-source document parser for LLM pipelines", cn:"面向 LLM 流水线的快速开源文档解析器", tags:["parser","llm","document"] },
-  { rank:37, name:"RyanCodrai/turbovec",       owner:"RyanCodrai",        stars:17457, lang:"Rust",       cat:"AI 数据处理",      desc:"Vector index built on TurboQuant, with Python bindings", cn:"基于 TurboQuant 的向量索引，支持 Python 绑定", tags:["ai","vector","embedding"] },
-  { rank:38, name:"raphaelmansuy/edgequake",   owner:"raphaelmansuy",     stars:2295,  lang:"Rust",       cat:"AI 数据处理",      desc:"High-performance GraphRAG inspired from LightRag", cn:"受 LightRag 启发的高性能 GraphRAG 方案", tags:["ai","rag","graph"] },
-  { rank:39, name:"mufeedvh/code2prompt",      owner:"mufeedvh",          stars:7746,  lang:"Rust",       cat:"AI 数据处理",      desc:"CLI to convert any codebase into a single LLM prompt with source tree", cn:"将任意代码库转换为单个 LLM 提示的 CLI 工具", tags:["cli","llm","prompt"] },
-  { rank:40, name:"sahenjp/RustXNG",           owner:"sahenjp",           stars:753,   lang:"Rust",       cat:"AI 工具/选型",     desc:"Self-hosted metasearch and grounding engine for AI agents", cn:"面向 AI Agent 的自托管元搜索和 grounding 引擎", tags:["search","ai","metasearch"] },
-  { rank:41, name:"YOLOW92/pagesift",          owner:"YOLOW92",           stars:187,   lang:"Rust",       cat:"AI 数据处理",      desc:"Rust web scraper & crawler for AI agents — URLs, PDFs, Office → clean Markdown", cn:"面向 AI Agent 的 Rust 网页抓取器，URL/PDF/Office 转 Markdown", tags:["scraper","ai","crawler"] },
-  { rank:42, name:"guidance-ai/llguidance",    owner:"guidance-ai",       stars:907,   lang:"Rust",       cat:"AI 推理/服务",     desc:"Super-fast Structured Outputs for LLM generation", cn:"面向 LLM 生成的极速结构化输出库", tags:["llm","inference","structured"] },
-  { rank:43, name:"ai-dynamo/dynamo",          owner:"ai-dynamo",         stars:8430,  lang:"Rust",       cat:"AI 推理/服务",     desc:"Datacenter-scale distributed inference serving framework", cn:"数据中心级分布式 AI 推理服务框架", tags:["inference","distributed","scale"] },
-  { rank:44, name:"Michael-A-Kuykendall/shimmy",owner:"Michael-A-Kuykendall",stars:6008,lang:"Rust",      cat:"AI 推理/服务",     desc:"Pure-Rust WebGPU inference engine — OpenAI-API compatible, GGUF native", cn:"纯 Rust WebGPU 推理引擎，兼容 OpenAI API，原生支持 GGUF", tags:["inference","gpu","webgpu"] },
-  { rank:45, name:"pegainfer-project/pegainfer",owner:"pegainfer-project",stars:731,  lang:"Rust",       cat:"AI 推理/服务",     desc:"Pure Rust + CUDA LLM inference engine — no PyTorch, OpenAI-compatible", cn:"纯 Rust + CUDA 的 LLM 推理引擎，无需 PyTorch，兼容 OpenAI API", tags:["inference","cuda","llm"] },
-  { rank:46, name:"Avarok-Cybersecurity/atlas",owner:"Avarok-Cybersecurity",stars:713, lang:"Rust",       cat:"AI 推理/服务",     desc:"Pure Rust inference engine for production use", cn:"面向生产环境的纯 Rust 推理引擎", tags:["inference","production"] },
-  { rank:47, name:"utilityai/llama-cpp-rs",    owner:"utilityai",         stars:664,   lang:"Rust",       cat:"AI 推理/服务",     desc:"Rust bindings for llama.cpp — run LLMs locally", cn:"llama.cpp 的 Rust 绑定，支持本地运行 LLM", tags:["inference","llm","local"] },
-  { rank:48, name:"LlamaEdge/LlamaEdge",      owner:"LlamaEdge",         stars:1663,  lang:"Rust",       cat:"AI 推理/服务",     desc:"Easiest & fastest way to run fine-tuned LLMs locally or on edge", cn:"在本地或边缘设备上运行微调 LLM 的最简单最快方案", tags:["inference","llm","edge"] },
-  { rank:49, name:"deeplethe/sandstorm",       owner:"deeplethe",         stars:4297,  lang:"Rust",       cat:"AI 基础设施",      desc:"Run thousands of AI agent sandboxes on the cheapest machines", cn:"在最廉价的机器上运行数千个 AI Agent 沙箱", tags:["ai","infrastructure","scale"] },
-  { rank:50, name:"oxc-project/oxc",           owner:"oxc-project",       stars:23312, lang:"Rust",       cat:"开发工具",         desc:"A collection of high-performance JavaScript tools (parser, linter, etc.)", cn:"高性能 JavaScript 工具集合（解析器、linter 等）", tags:["js","tooling","parser"] },
-  { rank:51, name:"biomejs/biome",             owner:"biomejs",           stars:26043, lang:"Rust",       cat:"开发工具/lint",    desc:"Toolchain for web projects — formatting, linting, and more", cn:"Web 项目工具链——格式化、linting 等", tags:["tooling","web","linter"] },
-  { rank:52, name:"gitbutlerapp/grit",         owner:"gitbutlerapp",      stars:575,   lang:"Rust",       cat:"开发工具",         desc:"Reimplementing Git in Rust — like a boss", cn:"用 Rust 重写 Git——就是这么霸气", tags:["git","cli","vcs"] },
-  { rank:53, name:"rolldown/rolldown",         owner:"rolldown",          stars:13994, lang:"Rust",       cat:"打包工具",         desc:"Fast Rust bundler for JS/TS with Rollup-compatible API", cn:"面向 JS/TS 的高速 Rust Bundler，兼容 Rollup API", tags:["bundler","web","build"] },
-  { rank:54, name:"web-infra-dev/rspack",      owner:"web-infra-dev",     stars:12966, lang:"Rust",       cat:"打包工具",         desc:"Fast Rust-based bundler with modernized webpack API", cn:"基于 Rust 的高速 Bundler，提供现代化的 Webpack API", tags:["bundler","web","webpack"] },
-  { rank:55, name:"tursodatabase/turso",       owner:"tursodatabase",     stars:25132, lang:"Rust",       cat:"数据库",           desc:"SQL database in Rust — SQLite-compatible, now also Postgres", cn:"用 Rust 编写的 SQL 数据库，兼容 SQLite，也支持 Postgres", tags:["database","sql","serverless"] },
-  { rank:56, name:"malisper/pgrust",           owner:"malisper",          stars:5736,  lang:"Rust",       cat:"数据库",           desc:"Postgres rewritten in Rust — faster than Postgres and Clickhouse", cn:"用 Rust 重写的 Postgres，比 Postgres 和 Clickhouse 更快", tags:["database","sql","performance"] },
-  { rank:57, name:"mullvad/gotatun",           owner:"mullvad",           stars:1397,  lang:"Rust",       cat:"网络安全/VPN",     desc:"Userspace WireGuard implementation in Rust", cn:"用 Rust 实现的 Userspace WireGuard", tags:["network","vpn","security"] },
-  { rank:58, name:"trifectatechfoundation/sudo-rs",owner:"trifectatechfoundation",stars:4502,lang:"Rust",    cat:"系统工具",         desc:"A memory-safe implementation of sudo and su", cn:"内存安全的 sudo 和 su 实现", tags:["system","security","unix"] },
-  { rank:59, name:"nashsu/AutoCLI",            owner:"nashsu",            stars:3018,  lang:"Rust",       cat:"系统工具",         desc:"Blazing fast, memory-safe CLI tool for system information", cn:"极速、内存安全的系统信息 CLI 工具", tags:["cli","system","info"] },
-  { rank:60, name:"martin-olivier/airgorah",   owner:"martin-olivier",    stars:4953,  lang:"Rust",       cat:"网络安全/VPN",     desc:"WiFi security auditing software", cn:"WiFi 安全审计软件", tags:["security","wifi","audit"] },
-  { rank:61, name:"cyph/cyph",                 owner:"cyph",              stars:1500,  lang:"Rust",       cat:"网络安全/VPN",     desc:"End-to-end encrypted communications platform", cn:"端到端加密通信平台", tags:["security","chat","e2ee"] },
-  { rank:62, name:"inbjo/MirrorProxy",         owner:"inbjo",             stars:310,   lang:"Rust",       cat:"网络工具",         desc:"All-in-one mirror acceleration with adapter-based proxy core", cn:"基于适配器代理核心的全能镜像加速工具", tags:["network","proxy","mirror"] },
-  { rank:63, name:"razvandimescu/numa",        owner:"razvandimescu",     stars:1969,  lang:"Rust",       cat:"网络工具",         desc:"Portable DNS resolver — .numa local domains, ad blocking, developer overrides", cn:"便携式 DNS 解析器，支持本地域名、广告屏蔽和开发者覆写", tags:["network","dns","adblock"] },
-  { rank:64, name:"fujiapple852/trippy",       owner:"fujiapple852",      stars:8132,  lang:"Rust",       cat:"网络工具",         desc:"Modern network diagnostic tool — traceroute reimagined", cn:"现代网络诊断工具——重新想象的 traceroute", tags:["network","diagnostic","cli"] },
-  { rank:65, name:"orbien-org/orbien",         owner:"orbien-org",        stars:1555,  lang:"Rust",       cat:"网络工具",         desc:"Lightweight high-performance tunneling tool (~5MB binary)", cn:"轻量高性能隧道工具（约 5MB 二进制文件）", tags:["network","tunnel","proxy"] },
-  { rank:66, name:"MoeShinX/relay-panel",      owner:"MoeShinX",          stars:216,   lang:"Rust",       cat:"网络工具",         desc:"Self-hosted TCP/UDP forwarding management panel", cn:"自托管的 TCP/UDP 转发管理面板", tags:["network","panel","forward"] },
-  { rank:67, name:"timokoesters/conduit",      owner:"timokoesters",      stars:601,   lang:"Rust",       cat:"聊天/通讯",        desc:"Simple, fast and reliable Matrix homeserver", cn:"简单、快速、可靠的 Matrix 服务器", tags:["chat","matrix","server"] },
-  { rank:68, name:"matrix-construct/tuwunel",  owner:"matrix-construct",  stars:2725,  lang:"Rust",       cat:"聊天/通讯",        desc:"Official successor to conduwuit — Matrix homeserver", cn:"conduwuit 的官方继任者——Matrix 服务器", tags:["chat","matrix","server"] },
-  { rank:69, name:"bethrah/librespot",         owner:"bethrah",           stars:1200,  lang:"Rust",       cat:"媒体/音乐",        desc:"Open source Spotify client library", cn:"开源 Spotify 客户端库", tags:["music","spotify","api"] },
-  { rank:70, name:"tramhao/termusic",          owner:"tramhao",           stars:2244,  lang:"Rust",       cat:"媒体/音乐",        desc:"Music Player TUI written in Rust", cn:"用 Rust 编写的音乐播放器 TUI", tags:["music","tui","player"] },
-  { rank:71, name:"synctv-org/synctv",         owner:"synctv-org",        stars:2528,  lang:"Rust",       cat:"媒体/流媒体",      desc:"Synchronized viewing, theater, and live streaming", cn:"同步观影、剧场和直播", tags:["media","streaming","sync"] },
-  { rank:72, name:"elliotthux/open-compute",   owner:"elliotthux",        stars:2864,  lang:"Rust",       cat:"云存储/服务",      desc:"Self-hosted Cloudflare Workers-compatible platform", cn:"自托管的 Cloudflare Workers 兼容平台", tags:["cloud","workers","compute"] },
-  { rank:73, name:"AtalayaLabs/OxiCloud",      owner:"AtalayaLabs",       stars:3676,  lang:"Rust",       cat:"云存储/服务",      desc:"Ultra-fast, secure & lightweight self-hosted cloud storage", cn:"极速、安全、轻量的自托管云存储", tags:["storage","self-hosted","cloud"] },
-  { rank:74, name:"kaspanet/rusty-kaspa",      owner:"kaspanet",          stars:877,   lang:"Rust",       cat:"区块链/ZKP",       desc:"Kaspa full-node reference implementation in Rust", cn:"用 Rust 实现的 Kaspa 全节点参考实现", tags:["blockchain","crypto","node"] },
-  { rank:75, name:"Nox/Nox",                   owner:"Nox",               stars:1841,  lang:"Rust",       cat:"区块链/ZKP",       desc:"Making Ethereum ZK proving infrastructure accessible", cn:"让以太坊 ZK 证明基础设施变得触手可及", tags:["blockchain","zkp","ethereum"] },
-  { rank:76, name:"Dicklesworthstone/franken_ocr",owner:"Dicklesworthstone",stars:345, lang:"Rust",       cat:"AI 数据处理",      desc:"Pure-Rust CPU-only OCR engine for Baidu Unlimited-OCR", cn:"纯 Rust CPU 端 OCR 引擎，基于百度无限 OCR", tags:["ocr","vision","ai"] },
+/* ============ 数据 ============ */
+const DATA=[
+{r:1,n:"oven-sh/bun",o:"oven-sh",s:96524,l:"TypeScript",c:"运行时/引擎",d:"Incredibly fast JavaScript runtime, bundler, test runner, and package manager",cn:"极速 JavaScript 运行时，集打包、测试、包管理于一体",t:["runtime","bundler","test"]},
+{r:2,n:"tauri-apps/tauri",o:"tauri-apps",s:112458,l:"Rust",c:"桌面应用框架",d:"Build smaller, faster, more secure desktop & mobile apps with web tech",cn:"用 Web 技术构建更小更快更安全的桌面和移动应用",t:["desktop","framework","web"]},
+{r:3,n:"rustdesk/rustdesk",o:"rustdesk",s:95000,l:"Rust",c:"远程桌面",d:"Open source remote desktop application",cn:"开源远程桌面应用，无需复杂配置即可使用",t:["remote","desktop","rdp"]},
+{r:4,n:"lencx/ChatGPT",o:"lencx",s:52000,l:"Rust",c:"AI 助手/终端",d:"ChatGPT desktop application",cn:"ChatGPT 桌面客户端应用",t:["ai","desktop","chatgpt"]},
+{r:5,n:"astral-sh/uv",o:"astral-sh",s:91493,l:"Rust",c:"包管理/工具链",d:"Extremely fast Python package and project manager, written in Rust",cn:"极速 Python 包和项目管理器，完全用 Rust 编写",t:["python","packaging","tooling"]},
+{r:6,n:"astral-sh/ruff",o:"astral-sh",s:50407,l:"Rust",c:"开发工具/lint",d:"Extremely fast Python linter and code formatter, written in Rust",cn:"极速 Python linter 和代码格式化工具",t:["python","linter","formatting"]},
+{r:7,n:"rust-unofficial/awesome-rust",o:"rust-unofficial",s:60302,l:"Rust",c:"资源列表",d:"A curated list of Rust code and resources",cn:"精心策划的 Rust 代码和资源列表",t:["list","community","resource"]},
+{r:8,n:"rtk-ai/rtk",o:"rtk-ai",s:85401,l:"Rust",c:"AI 助手/代理",d:"CLI proxy that reduces LLM token consumption by 60-90%",cn:"CLI 代理，可将 LLM Token 消耗降低 60-90%",t:["cli","proxy","llm"]},
+{r:9,n:"lapce/lapce",o:"lapce",s:37000,l:"Rust",c:"开发工具/编辑器",d:"Lightning-fast and powerful code editor",cn:"闪电般快速且强大的代码编辑器",t:["editor","ide","code"]},
+{r:10,n:"helix-editor/helix",o:"helix-editor",s:39000,l:"Rust",c:"开发工具/编辑器",d:"Post-modern modal text editor",cn:"后现代模态文本编辑器",t:["editor","terminal","vim"]},
+{r:11,n:"farion1231/cc-switch",o:"farion1231",s:151435,l:"Rust",c:"AI 助手/终端",d:"Cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode",cn:"跨平台桌面全能助手，支持 Claude Code、Codex、OpenCode",t:["ai","desktop","assistant"]},
+{r:12,n:"fish-shell/fish-shell",o:"fish-shell",s:34398,l:"Rust",c:"终端/Shell",d:"User-friendly command line shell with auto-suggestions",cn:"用户友好的命令行 Shell，带有智能自动补全建议",t:["shell","cli","terminal"]},
+{r:13,n:"zellij-org/zellij",o:"zellij-org",s:25000,l:"Rust",c:"终端/Shell",d:"Terminal workspace with plugins",cn:"支持插件的终端工作区管理器",t:["terminal","tiling","multiplexer"]},
+{r:14,n:"atuinsh/atuin",o:"atuinsh",s:25000,l:"Rust",c:"终端/Shell",d:"Magical shell history with search and sync",cn:"神奇的 Shell 历史记录管理，支持搜索和同步",t:["shell","cli","history"]},
+{r:15,n:"h4ckf0r0day/obscura",o:"h4ckf0r0day",s:30253,l:"Rust",c:"浏览器自动化",d:"Headless browser for AI agents and web scraping",cn:"面向 AI Agent 和网页抓取的无头浏览器",t:["browser","ai","scraping"]},
+{r:16,n:"lexmount/moli",o:"lexmount",s:22357,l:"Rust",c:"浏览器自动化",d:"Best headless browser for AI agents — Lite, Fast, High-Compatibility",cn:"面向 AI Agent 的最佳无头浏览器，轻量快速高兼容",t:["browser","ai"]},
+{r:17,n:"vercel-labs/agent-browser",o:"vercel-labs",s:45346,l:"Rust",c:"浏览器自动化",d:"Browser automation CLI for AI agents",cn:"面向 AI Agent 的浏览器自动化 CLI 工具",t:["browser","ai","automation"]},
+{r:18,n:"zeroclaw-labs/zeroclaw",o:"zeroclaw-labs",s:33109,l:"Rust",c:"AI Agent 框架",d:"Fast, small, fully autonomous AI personal assistant infrastructure",cn:"快速小巧的完全自主 AI 个人助手基础设施",t:["ai","agent","personal"]},
+{r:19,n:"tinyhumansai/openhuman",o:"tinyhumansai",s:42516,l:"Rust",c:"AI Agent 框架",d:"Fastest, cheapest, most efficient open-source agent harness",cn:"最快、最便宜、最高效的开源 Agent 框架",t:["ai","agent","framework"]},
+{r:20,n:"nearai/ironclaw",o:"nearai",s:12709,l:"Rust",c:"AI Agent OS",d:"Agent OS focused on privacy, security and extensibility",cn:"专注于隐私、安全和可扩展性的 Agent 操作系统",t:["os","agent","privacy"]},
+{r:21,n:"RightNow-AI/openfang",o:"RightNow-AI",s:18241,l:"Rust",c:"AI Agent OS",d:"Open-source Agent Operating System",cn:"开源 Agent 操作系统",t:["os","agent","platform"]},
+{r:22,n:"moltis-org/moltis",o:"moltis-org",s:2939,l:"Rust",c:"AI Agent 框架",d:"Secure persistent personal agent server — one binary, sandboxed",cn:"安全持久化的个人 Agent 服务器，单二进制，沙箱隔离",t:["ai","agent","server"]},
+{r:23,n:"sleepokai/Codync",o:"sleepokai",s:1783,l:"Rust",c:"AI 助手/终端",d:"Open source Grok Bot alternative — BYO agent and subscription",cn:"开源 Grok Bot 替代品，自带 Agent 和订阅",t:["ai","agent","chat"]},
+{r:24,n:"microclaw/microclaw",o:"microclaw",s:751,l:"Rust",c:"AI Agent 框架",d:"Agentic AI assistant that lives in your chats",cn:"嵌入聊天中的 Agentic AI 助手",t:["ai","agent","chat"]},
+{r:25,n:"l0ng-ai/tty7",o:"l0ng-ai",s:1428,l:"Rust",c:"终端/Shell",d:"Terminal that outlives its window — shells survive quitting the app",cn:"超越窗口生命周期的终端 — 退出后 Shell 仍存活",t:["terminal","cli","tty"]},
+{r:26,n:"BoundaryML/baml",o:"BoundaryML",s:9475,l:"Rust",c:"AI DSL/协议",d:"The programming language for AI agents — structured outputs",cn:"面向 AI Agent 的编程语言，用于结构化输出",t:["language","agent","dsl"]},
+{r:27,n:"garudust-org/garudust-agent",o:"garudust-org",s:31,l:"Rust",c:"AI Agent 框架",d:"Open-source AI agent runtime — self-hostable with persistent memory",cn:"开源 AI Agent 运行时，支持自托管和持久化记忆",t:["ai","agent","runtime"]},
+{r:28,n:"temm1e-labs/temm1e",o:"temm1e-labs",s:495,l:"Rust",c:"AI Agent OS",d:"One of the ground zero for AGI — free and open source forever",cn:"AGI 的起点之一 — 永久免费开源",t:["ai","agi","research"]},
+{r:29,n:"by-scott/cortex",o:"by-scott",s:394,l:"Rust",c:"AI Agent OS",d:"Cognitive runtime for language models with memory & metacognition",cn:"具备记忆和元认知能力的语言模型认知运行时",t:["ai","runtime","cognitive"]},
+{r:30,n:"alexsJones/llmfit",o:"alexsJones",s:38600,l:"Rust",c:"AI 工具/选型",d:"Hundreds of models & providers — one command to find what runs on your hardware",cn:"数百模型与提供商一键查询，找到最适合你硬件的模型",t:["llm","cli","benchmark"]},
+{r:31,n:"vercel-labs/ai",o:"vercel-labs",s:5428,l:"TypeScript",c:"AI 助手/代理",d:"AI SDK for building AI applications",cn:"用于构建 AI 应用的开源 SDK",t:["ai","sdk"]},
+{r:32,n:"storytold/craft-anything",o:"storytold",s:5938,l:"Rust",c:"AI 工具/选型",d:"Understand how any software works and craft your own",cn:"理解任意软件的工作原理并创建自己的版本",t:["ai","tooling","reverse"]},
+{r:33,n:"SaladDay/cc-switch-cli",o:"SaladDay",s:5428,l:"Rust",c:"AI 助手/终端",d:"Cross-platform CLI All-in-One assistant for Claude Code, Codex & Gemini",cn:"跨平台 CLI 全能助手，支持 Claude Code、Codex 和 Gemini",t:["cli","ai","assistant"]},
+{r:34,n:"actionbook/ascent-research",o:"actionbook",s:190,l:"Rust",c:"AI 助手/终端",d:"Research CLI for AI agents",cn:"面向 AI Agent 的研究 CLI 工具",t:["cli","research","ai"]},
+{r:35,n:"qdrant/qdrant",o:"qdrant",s:25000,l:"Rust",c:"AI 数据处理",d:"Vector similarity search engine for AI applications",cn:"面向 AI 应用的向量相似度搜索引擎",t:["ai","vector-db","search"]},
+{r:36,n:"run-llama/liteparse",o:"run-llama",s:12976,l:"Rust",c:"AI 数据处理",d:"Fast, helpful, open-source document parser for LLM pipelines",cn:"面向 LLM 流水线的快速开源文档解析器",t:["parser","llm","document"]},
+{r:37,n:"RyanCodrai/turbovec",o:"RyanCodrai",s:17457,l:"Rust",c:"AI 数据处理",d:"Vector index built on TurboQuant, with Python bindings",cn:"基于 TurboQuant 的向量索引，支持 Python 绑定",t:["ai","vector","embedding"]},
+{r:38,n:"raphaelmansuy/edgequake",o:"raphaelmansuy",s:2295,l:"Rust",c:"AI 数据处理",d:"High-performance GraphRAG inspired from LightRag",cn:"受 LightRag 启发的高性能 GraphRAG 方案",t:["ai","rag","graph"]},
+{r:39,n:"mufeedvh/code2prompt",o:"mufeedvh",s:7746,l:"Rust",c:"AI 数据处理",d:"CLI to convert any codebase into a single LLM prompt with source tree",cn:"将任意代码库转换为单个 LLM 提示的 CLI 工具",t:["cli","llm","prompt"]},
+{r:40,n:"sahenjp/RustXNG",o:"sahenjp",s:753,l:"Rust",c:"AI 工具/选型",d:"Self-hosted metasearch and grounding engine for AI agents",cn:"面向 AI Agent 的自托管元搜索和 grounding 引擎",t:["search","ai","metasearch"]},
+{r:41,n:"YOLOW92/pagesift",o:"YOLOW92",s:187,l:"Rust",c:"AI 数据处理",d:"Rust web scraper & crawler for AI agents — URLs, PDFs, Office → clean Markdown",cn:"面向 AI Agent 的 Rust 网页抓取器，URL/PDF/Office 转 Markdown",t:["scraper","ai","crawler"]},
+{r:42,n:"guidance-ai/llguidance",o:"guidance-ai",s:907,l:"Rust",c:"AI 推理/服务",d:"Super-fast Structured Outputs for LLM generation",cn:"面向 LLM 生成的极速结构化输出库",t:["llm","inference","structured"]},
+{r:43,n:"ai-dynamo/dynamo",o:"ai-dynamo",s:8430,l:"Rust",c:"AI 推理/服务",d:"Datacenter-scale distributed inference serving framework",cn:"数据中心级分布式 AI 推理服务框架",t:["inference","distributed","scale"]},
+{r:44,n:"Michael-A-Kuykendall/shimmy",o:"Michael-A-Kuykendall",s:6008,l:"Rust",c:"AI 推理/服务",d:"Pure-Rust WebGPU inference engine — OpenAI-API compatible, GGUF native",cn:"纯 Rust WebGPU 推理引擎，兼容 OpenAI API，原生支持 GGUF",t:["inference","gpu","webgpu"]},
+{r:45,n:"pegainfer-project/pegainfer",o:"pegainfer-project",s:731,l:"Rust",c:"AI 推理/服务",d:"Pure Rust + CUDA LLM inference engine — no PyTorch, OpenAI-compatible",cn:"纯 Rust + CUDA 的 LLM 推理引擎，无需 PyTorch，兼容 OpenAI API",t:["inference","cuda","llm"]},
+{r:46,n:"Avarok-Cybersecurity/atlas",o:"Avarok-Cybersecurity",s:713,l:"Rust",c:"AI 推理/服务",d:"Pure Rust inference engine for production use",cn:"面向生产环境的纯 Rust 推理引擎",t:["inference","production"]},
+{r:47,n:"utilityai/llama-cpp-rs",o:"utilityai",s:664,l:"Rust",c:"AI 推理/服务",d:"Rust bindings for llama.cpp — run LLMs locally",cn:"llama.cpp 的 Rust 绑定，支持本地运行 LLM",t:["inference","llm","local"]},
+{r:48,n:"LlamaEdge/LlamaEdge",o:"LlamaEdge",s:1663,l:"Rust",c:"AI 推理/服务",d:"Easiest & fastest way to run fine-tuned LLMs locally or on edge",cn:"在本地或边缘设备上运行微调 LLM 的最简单最快方案",t:["inference","llm","edge"]},
+{r:49,n:"deeplethe/sandstorm",o:"deeplethe",s:4297,l:"Rust",c:"AI 基础设施",d:"Run thousands of AI agent sandboxes on the cheapest machines",cn:"在最廉价的机器上运行数千个 AI Agent 沙箱",t:["ai","infrastructure","scale"]},
+{r:50,n:"oxc-project/oxc",o:"oxc-project",s:23312,l:"Rust",c:"开发工具",d:"A collection of high-performance JavaScript tools (parser, linter, etc.)",cn:"高性能 JavaScript 工具集合（解析器、linter 等）",t:["js","tooling","parser"]},
+{r:51,n:"biomejs/biome",o:"biomejs",s:26043,l:"Rust",c:"开发工具/lint",d:"Toolchain for web projects — formatting, linting, and more",cn:"Web 项目工具链——格式化、linting 等",t:["tooling","web","linter"]},
+{r:52,n:"gitbutlerapp/grit",o:"gitbutlerapp",s:575,l:"Rust",c:"开发工具",d:"Reimplementing Git in Rust — like a boss",cn:"用 Rust 重写 Git——就是这么霸气",t:["git","cli","vcs"]},
+{r:53,n:"rolldown/rolldown",o:"rolldown",s:13994,l:"Rust",c:"打包工具",d:"Fast Rust bundler for JS/TS with Rollup-compatible API",cn:"面向 JS/TS 的高速 Rust Bundler，兼容 Rollup API",t:["bundler","web","build"]},
+{r:54,n:"web-infra-dev/rspack",o:"web-infra-dev",s:12966,l:"Rust",c:"打包工具",d:"Fast Rust-based bundler with modernized webpack API",cn:"基于 Rust 的高速 Bundler，提供现代化的 Webpack API",t:["bundler","web","webpack"]},
+{r:55,n:"tursodatabase/turso",o:"tursodatabase",s:25132,l:"Rust",c:"数据库",d:"SQL database in Rust — SQLite-compatible, now also Postgres",cn:"用 Rust 编写的 SQL 数据库，兼容 SQLite，也支持 Postgres",t:["database","sql","serverless"]},
+{r:56,n:"malisper/pgrust",o:"malisper",s:5736,l:"Rust",c:"数据库",d:"Postgres rewritten in Rust — faster than Postgres and Clickhouse",cn:"用 Rust 重写的 Postgres，比 Postgres 和 Clickhouse 更快",t:["database","sql","performance"]},
+{r:57,n:"mullvad/gotatun",o:"mullvad",s:1397,l:"Rust",c:"网络安全/VPN",d:"Userspace WireGuard implementation in Rust",cn:"用 Rust 实现的 Userspace WireGuard",t:["network","vpn","security"]},
+{r:58,n:"trifectatechfoundation/sudo-rs",o:"trifectatechfoundation",s:4502,l:"Rust",c:"系统工具",d:"A memory-safe implementation of sudo and su",cn:"内存安全的 sudo 和 su 实现",t:["system","security","unix"]},
+{r:59,n:"nashsu/AutoCLI",o:"nashsu",s:3018,l:"Rust",c:"系统工具",d:"Blazing fast, memory-safe CLI tool for system information",cn:"极速、内存安全的系统信息 CLI 工具",t:["cli","system","info"]},
+{r:60,n:"martin-olivier/airgorah",o:"martin-olivier",s:4953,l:"Rust",c:"网络安全/VPN",d:"WiFi security auditing software",cn:"WiFi 安全审计软件",t:["security","wifi","audit"]},
+{r:61,n:"cyph/cyph",o:"cyph",s:1500,l:"Rust",c:"网络安全/VPN",d:"End-to-end encrypted communications platform",cn:"端到端加密通信平台",t:["security","chat","e2ee"]},
+{r:62,n:"inbjo/MirrorProxy",o:"inbjo",s:310,l:"Rust",c:"网络工具",d:"All-in-one mirror acceleration with adapter-based proxy core",cn:"基于适配器代理核心的全能镜像加速工具",t:["network","proxy","mirror"]},
+{r:63,n:"razvandimescu/numa",o:"razvandimescu",s:1969,l:"Rust",c:"网络工具",d:"Portable DNS resolver — .numa local domains, ad blocking, developer overrides",cn:"便携式 DNS 解析器，支持本地域名、广告屏蔽和开发者覆写",t:["network","dns","adblock"]},
+{r:64,n:"fujiapple852/trippy",o:"fujiapple852",s:8132,l:"Rust",c:"网络工具",d:"Modern network diagnostic tool — traceroute reimagined",cn:"现代网络诊断工具——重新想象的 traceroute",t:["network","diagnostic","cli"]},
+{r:65,n:"orbien-org/orbien",o:"orbien-org",s:1555,l:"Rust",c:"网络工具",d:"Lightweight high-performance tunneling tool (~5MB binary)",cn:"轻量高性能隧道工具（约 5MB 二进制文件）",t:["network","tunnel","proxy"]},
+{r:66,n:"MoeShinX/relay-panel",o:"MoeShinX",s:216,l:"Rust",c:"网络工具",d:"Self-hosted TCP/UDP forwarding management panel",cn:"自托管的 TCP/UDP 转发管理面板",t:["network","panel","forward"]},
+{r:67,n:"timokoesters/conduit",o:"timokoesters",s:601,l:"Rust",c:"聊天/通讯",d:"Simple, fast and reliable Matrix homeserver",cn:"简单、快速、可靠的 Matrix 服务器",t:["chat","matrix","server"]},
+{r:68,n:"matrix-construct/tuwunel",o:"matrix-construct",s:2725,l:"Rust",c:"聊天/通讯",d:"Official successor to conduwuit — Matrix homeserver",cn:"conduwuit 的官方继任者——Matrix 服务器",t:["chat","matrix","server"]},
+{r:69,n:"bethrah/librespot",o:"bethrah",s:1200,l:"Rust",c:"媒体/音乐",d:"Open source Spotify client library",cn:"开源 Spotify 客户端库",t:["music","spotify","api"]},
+{r:70,n:"tramhao/termusic",o:"tramhao",s:2244,l:"Rust",c:"媒体/音乐",d:"Music Player TUI written in Rust",cn:"用 Rust 编写的音乐播放器 TUI",t:["music","tui","player"]},
+{r:71,n:"synctv-org/synctv",o:"synctv-org",s:2528,l:"Rust",c:"媒体/流媒体",d:"Synchronized viewing, theater, and live streaming",cn:"同步观影、剧场和直播",t:["media","streaming","sync"]},
+{r:72,n:"elliotthux/open-compute",o:"elliotthux",s:2864,l:"Rust",c:"云存储/服务",d:"Self-hosted Cloudflare Workers-compatible platform",cn:"自托管的 Cloudflare Workers 兼容平台",t:["cloud","workers","compute"]},
+{r:73,n:"AtalayaLabs/OxiCloud",o:"AtalayaLabs",s:3676,l:"Rust",c:"云存储/服务",d:"Ultra-fast, secure & lightweight self-hosted cloud storage",cn:"极速、安全、轻量的自托管云存储",t:["storage","self-hosted","cloud"]},
+{r:74,n:"kaspanet/rusty-kaspa",o:"kaspanet",s:877,l:"Rust",c:"区块链/ZKP",d:"Kaspa full-node reference implementation in Rust",cn:"用 Rust 实现的 Kaspa 全节点参考实现",t:["blockchain","crypto","node"]},
+{r:75,n:"Nox/Nox",o:"Nox",s:1841,l:"Rust",c:"区块链/ZKP",d:"Making Ethereum ZK proving infrastructure accessible",cn:"让以太坊 ZK 证明基础设施变得触手可及",t:["blockchain","zkp","ethereum"]},
+{r:76,n:"Dicklesworthstone/franken_ocr",o:"Dicklesworthstone",s:345,l:"Rust",c:"AI 数据处理",d:"Pure-Rust CPU-only OCR engine for Baidu Unlimited-OCR",cn:"纯 Rust CPU 端 OCR 引擎，基于百度无限 OCR",t:["ocr","vision","ai"]}
 ];
 
-const CATS = [
-  { key:'all',          label:'🏠 全部',        icon:'🏠' },
-  { key:'AI Agent 框架',  label:'🤖 AI Agent 框架',  icon:'🤖' },
-  { key:'AI 助手/终端',   label:'💬 AI 助手/终端',   icon:'💬' },
-  { key:'AI 推理/服务',   label:'⚡ AI 推理/服务',   icon:'⚡' },
-  { key:'AI 数据处理',    label:'📊 AI 数据处理',    icon:'📊' },
-  { key:'AI 基础设施',    label:'🏗️  AI 基础设施',   icon:'🏗️' },
-  { key:'AI DSL/协议',    label:'📐 AI DSL/协议',    icon:'📐' },
-  { key:'AI 工具/选型',   label:'🔎 AI 工具/选型',   icon:'🔎' },
-  { key:'桌面应用框架',   label:'🖥️ 桌面应用框架',   icon:'🖥️' },
-  { key:'远程桌面',       label:'📡 远程桌面',       icon:'📡' },
-  { key:'开发工具/编辑器',label:'🔧 开发工具/编辑器', icon:'🔧' },
-  { key:'开发工具/lint',  label:'🔍 开发工具/lint',  icon:'🔍' },
-  { key:'开发工具',       label:'🛠️ 开发工具',       icon:'🛠️' },
-  { key:'打包工具',       label:'📦 打包工具',       icon:'📦' },
-  { key:'数据库',         label:'🗄️ 数据库',         icon:'🗄️' },
-  { key:'终端/Shell',     label:'💻 终端/Shell',     icon:'💻' },
-  { key:'浏览器自动化',   label:'🌐 浏览器自动化',   icon:'🌐' },
-  { key:'网络工具',       label:'🔗 网络工具',       icon:'🔗' },
-  { key:'网络安全/VPN',   label:'🔒 网络安全/VPN',   icon:'🔒' },
-  { key:'聊天/通讯',      label:'💾 聊天/通讯',      icon:'💾' },
-  { key:'媒体/流媒体',    label:'🎬 媒体/流媒体',    icon:'🎬' },
-  { key:'媒体/音乐',      label:'🎵 媒体/音乐',      icon:'🎵' },
-  { key:'云存储/服务',    label:'☁️  云存储/服务',    icon:'☁️' },
-  { key:'区块链/ZKP',     label:'⛓️  区块链/ZKP',     icon:'⛓️' },
-  { key:'系统工具',       label:'⚙️  系统工具',       icon:'⚙️' },
-  { key:'资源列表',       label:'📋 资源列表',       icon:'📋' },
-  { key:'运行时/引擎',    label:'🚀 运行时/引擎',    icon:'🚀' },
+const CATS=[
+{k:'all',l:'🏠 全部',i:'🏠'},
+{k:'AI Agent 框架',l:'🤖 AI Agent 框架',i:'🤖'},
+{k:'AI 助手/终端',l:'💬 AI 助手/终端',i:'💬'},
+{k:'AI 推理/服务',l:'⚡ AI 推理/服务',i:'⚡'},
+{k:'AI 数据处理',l:'📊 AI 数据处理',i:'📊'},
+{k:'AI 基础设施',l:'🏗️  AI 基础设施',i:'🏗️'},
+{k:'AI DSL/协议',l:'📐 AI DSL/协议',i:'📐'},
+{k:'AI 工具/选型',l:'🔎 AI 工具/选型',i:'🔎'},
+{k:'桌面应用框架',l:'🖥️ 桌面应用框架',i:'🖥️'},
+{k:'远程桌面',l:'📡 远程桌面',i:'📡'},
+{k:'开发工具/编辑器',l:'🔧 开发工具/编辑器',i:'🔧'},
+{k:'开发工具/lint',l:'🔍 开发工具/lint',i:'🔍'},
+{k:'开发工具',l:'🛠️ 开发工具',i:'🛠️'},
+{k:'打包工具',l:'📦 打包工具',i:'📦'},
+{k:'数据库',l:'🗄️ 数据库',i:'🗄️'},
+{k:'终端/Shell',l:'💻 终端/Shell',i:'💻'},
+{k:'浏览器自动化',l:'🌐 浏览器自动化',i:'🌐'},
+{k:'网络工具',l:'🔗 网络工具',i:'🔗'},
+{k:'网络安全/VPN',l:'🔒 网络安全/VPN',i:'🔒'},
+{k:'聊天/通讯',l:'💾 聊天/通讯',i:'💾'},
+{k:'媒体/流媒体',l:'🎬 媒体/流媒体',i:'🎬'},
+{k:'媒体/音乐',l:'🎵 媒体/音乐',i:'🎵'},
+{k:'云存储/服务',l:'☁️  云存储/服务',i:'☁️'},
+{k:'区块链/ZKP',l:'⛓️  区块链/ZKP',i:'⛓️'},
+{k:'系统工具',l:'⚙️  系统工具',i:'⚙️'},
+{k:'资源列表',l:'📋 资源列表',i:'📋'},
+{k:'运行时/引擎',l:'🚀 运行时/引擎',i:'🚀'}
 ];
 
-let activeCat = 'all', sortKey = 'rank', sortAsc = true, query = '';
+let ac='all',sk='rank',sa=true,q='';
 
-// ========== 渲染 ==========
-function renderTabs() {
-  const el = document.getElementById('cat-tabs');
-  const counts = {};
-  CATS.filter(c => c.key !== 'all').forEach(c => { counts[c.key] = DATA.filter(d => d.cat === c.key).length; });
-  el.innerHTML = CATS.map(c => {
-    const cnt = c.key === 'all' ? DATA.length : (counts[c.key] || 0);
-    const cls = c.key === activeCat ? 'active' : '';
-    return `<button class="cat-tab ${cls}" onclick="setCat('${c.key}')">${c.icon} ${c.label}<span class="count">${cnt}</span></button>`;
+function rc(){
+  const el=document.getElementById('cat-tabs');
+  const ct={};
+  CATS.filter(c=>c.k!=='all').forEach(c=>{ct[c.k]=DATA.filter(d=>d.c===c.k).length;});
+  el.innerHTML=CATS.map(c=>{
+    const cnt=c.k==='all'?DATA.length:(ct[c.k]||0);
+    const cls=c.k===ac?'active':'';
+    return`<button class="cat-tab ${cls}" onclick="sc('${c.k}')">${c.i} ${c.l}<span class="cnt">${cnt}</span></button>`;
   }).join('');
 }
 
-function render() {
-  renderTabs();
-  let rows = activeCat === 'all' ? [...DATA] : DATA.filter(d => d.cat === activeCat);
-  if (query) {
-    const q = query.toLowerCase();
-    rows = rows.filter(r =>
-      r.name.toLowerCase().includes(q) ||
-      r.owner.toLowerCase().includes(q) ||
-      r.desc.toLowerCase().includes(q) ||
-      r.cn.toLowerCase().includes(q) ||
-      r.tags.some(t => t.toLowerCase().includes(q))
+function rs(){
+  rc();
+  let rows=ac==='all'?[...DATA]:DATA.filter(d=>d.c===ac);
+  if(q){
+    const ql=q.toLowerCase();
+    rows=rows.filter(r=>
+      r.n.toLowerCase().includes(ql)||
+      r.o.toLowerCase().includes(ql)||
+      r.d.toLowerCase().includes(ql)||
+      r.cn.toLowerCase().includes(ql)||
+      r.t.some(t=>t.toLowerCase().includes(ql))
     );
   }
-  rows.sort((a,b) => {
-    let va = a[sortKey], vb = b[sortKey];
-    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
-    return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  rows.sort((a,b)=>{
+    let va=a[sk],vb=b[sk];
+    if(typeof va==='string'){va=va.toLowerCase();vb=vb.toLowerCase();}
+    return sa?(va>vb?1:-1):(va<vb?1:-1);
   });
 
-  const tbody = document.getElementById('tbody');
-  const empty = document.getElementById('empty');
-  if (!rows.length) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
-  empty.classList.add('hidden');
+  const tb=document.getElementById('tbody');
+  const ep=document.getElementById('empty');
+  if(!rows.length){tb.innerHTML='';ep.classList.remove('hidden');return;}
+  ep.classList.add('hidden');
 
-  tbody.innerHTML = rows.map((r, i) => {
-    const lcls = { rust:'lang-rust', typescript:'lang-ts', js:'lang-js', python:'lang-python', go:'lang-go' }[r.lang] || 'lang-other';
-    const starsK = r.stars >= 10000 ? (r.stars/1000).toFixed(1) + 'K' : r.stars.toLocaleString();
-    const badge = activeCat === 'all' && r.stars >= 90000 ? '<span class="badge badge-top">🏆</span>' : '';
-    const hot = r.stars >= 30000 && activeCat === 'all' ? '<span class="badge badge-hot">🔥</span>' : '';
-    const delay = (i * 0.04).toFixed(2);
-    return `<tr style="animation-delay:${delay}s">
-      <td class="col-rank">${r.rank}</td>
-      <td class="col-name"><a href="https://github.com/${r.name}" target="_blank" rel="noopener">${r.name}</a>${badge}${hot}</td>
-      <td class="col-owner"><span>${r.owner}</span></td>
-      <td class="col-stars">⭐ ${starsK}</td>
-      <td class="col-lang"><span class="lang-tag ${lcls}">${r.lang}</span></td>
-      <td class="col-desc">${r.desc}</td>
+  tb.innerHTML=rows.map((r,i)=>{
+    const lc={'rust':'lang-rust','typescript':'lang-ts','js':'lang-js','python':'lang-python','go':'lang-go'}[r.l]||'lang-other';
+    const sk=r.s>=10000?(r.s/1000).toFixed(1)+'K':r.s.toLocaleString();
+    const bd=ac==='all'&&r.s>=90000?'<span class="badge badge-top">🏆</span>':'';
+    const ht=r.s>=30000&&ac==='all'?'<span class="badge badge-hot">🔥</span>':'';
+    const dl=(i*.035).toFixed(3);
+    return`<tr style="animation-delay:${dl}s">
+      <td class="col-rank">${r.r}</td>
+      <td class="col-name"><a href="https://github.com/${r.n}" target="_blank" rel="noopener">${r.n}</a>${bd}${ht}</td>
+      <td class="col-owner"><span>${r.o}</span></td>
+      <td class="col-stars">⭐ ${sk}</td>
+      <td class="col-lang"><span class="lang-tag ${lc}">${r.l}</span></td>
+      <td class="col-desc">${r.d}</td>
       <td class="col-cn">${r.cn}</td>
-      <td class="col-tags">${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}</td>
+      <td class="col-tags">${r.t.map(t=>`<span class="tag">${t}</span>`).join('')}</td>
     </tr>`;
   }).join('');
 
-  // 更新排序箭头
-  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
-  const arrMap = { rank:'arr-rank', name:'arr-name', owner:'arr-owner', stars:'arr-stars' };
-  if (arrMap[sortKey]) {
-    const arr = document.getElementById(arrMap[sortKey]);
-    arr.textContent = sortAsc ? '▲' : '▼';
-    arr.closest('th').classList.add('sorted');
+  document.querySelectorAll('thead th').forEach(th=>th.classList.remove('sorted'));
+  const am={rank:'arr-rank',name:'arr-name',owner:'arr-owner',stars:'arr-stars'};
+  if(am[sk]){
+    const a=document.getElementById(am[sk]);
+    a.textContent=sa?'▲':'▼';
+    a.closest('th').classList.add('sorted');
   }
 }
 
-function setCat(k) { activeCat = k; render(); }
-function setSort(k) {
-  if (sortKey === k) sortAsc = !sortAsc;
-  else { sortKey = k; sortAsc = k === 'rank' || k === 'name'; }
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === k));
-  render();
+function sc(k){ac=k;rs()}
+function ss(k){
+  if(sk===k)sa=!sa;
+  else{sk=k;sa=k==='rank'||k==='name';}
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.toggle('active',b.dataset.sort===k));
+  rs();
 }
-function sortBy(col) { setSort(col); }
+function sb(c){ss(c)}
 
-document.getElementById('search').addEventListener('input', e => { query = e.target.value; render(); });
+document.getElementById('search').addEventListener('input',e=>{q=e.target.value;rs()});
 
-function initStats() {
-  const total = DATA.length;
-  const totalStars = DATA.reduce((s,r) => s + r.stars, 0);
-  const cats = new Set(DATA.map(r => r.cat)).size;
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-stars').textContent = (totalStars / 1000).toFixed(0);
-  document.getElementById('stat-cats').textContent = cats;
-  document.getElementById('total-count').textContent = total;
-  document.getElementById('star-count').textContent = (totalStars / 1000).toFixed(0);
-}
-
-initStats();
-render();
+(function(){
+  const t=DATA.length,ts=DATA.reduce((s,r)=>s+r.s,0),cc=new Set(DATA.map(r=>r.c)).size;
+  document.getElementById('stat-total').textContent=t;
+  document.getElementById('stat-stars').textContent=(ts/1000).toFixed(0);
+  document.getElementById('stat-cats').textContent=cc;
+  document.getElementById('total-count').textContent=t;
+  document.getElementById('star-count').textContent=(ts/1000).toFixed(0);
+})();
+rs();
 </script>
 </body>
 </html>
