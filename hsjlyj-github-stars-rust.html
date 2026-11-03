@@ -5,157 +5,298 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>hsjlyj GitHub ★ Rust 项目一览</title>
 <style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 1; }
+  }
+  @keyframes borderGlow {
+    0%, 100% { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 8px rgba(59,130,246,0.1); }
+    50%      { border-color: rgba(59,130,246,0.8); box-shadow: 0 0 20px rgba(59,130,246,0.25); }
+  }
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes starTwinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.5); }
+  }
+  @keyframes rowSlideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes rainbowText {
+    0%   { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
   :root {
-    --bg: #f8fafc; --surface: #ffffff; --border: #e2e8f0;
-    --text: #1e293b; --text-muted: #64748b; --accent: #3b82f6;
-    --accent-light: #dbeafe; --star: #f59e0b; --green: #10b981;
-    --purple: #8b5cf6; --red: #ef4444;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06);
-    --shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
+    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235;
+    --border: #1e293b; --border-hover: #334155;
+    --text: #e2e8f0; --text-muted: #94a3b8; --accent: #3b82f6;
+    --accent2: #8b5cf6; --star: #f59e0b; --green: #10b981;
+    --red: #ef4444; --pink: #ec4899; --cyan: #06b6d4;
+    --glow-blue: rgba(59,130,246,0.4);
+    --glow-purple: rgba(139,92,246,0.3);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
     background: var(--bg); color: var(--text); line-height: 1.6;
-    padding: 2rem; min-height: 100vh;
+    min-height: 100vh; overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(6,182,212,0.04) 0%, transparent 50%);
   }
-  .container { max-width: 1320px; margin: 0 auto; }
 
-  header { text-align: center; margin-bottom: 1.5rem; }
-  header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
-  header p { color: var(--text-muted); font-size: 0.9rem; }
+  /* 粒子背景 */
+  .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+  .particle {
+    position: absolute; border-radius: 50%; background: rgba(59,130,246,0.15);
+    animation: float linear infinite;
+  }
 
-  .stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out; }
+  header h1 {
+    font-size: 2.2rem; margin-bottom: 0.4rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--cyan), var(--accent));
+    background-size: 300% 300%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease infinite;
+  }
+  header .subtitle { color: var(--text-muted); font-size: 0.95rem; }
+  header .subtitle span { color: var(--star); font-weight: 600; }
+
+  /* 装饰星 */
+  .deco-star {
+    position: absolute; font-size: 1.2rem; opacity: 0.15; pointer-events: none;
+    animation: starTwinkle 3s ease-in-out infinite;
+  }
+
+  /* Stats */
+  .stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .stat-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    padding: 0.7rem 1.2rem; text-align: center; min-width: 110px;
-    box-shadow: var(--shadow);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 1rem 1.5rem; text-align: center; min-width: 130px;
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.6s ease-out both;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
-  .stat-card .num { font-size: 1.5rem; font-weight: 700; }
-  .stat-card:nth-child(1) .num { color: var(--accent); }
-  .stat-card:nth-child(2) .num { color: var(--star); }
-  .stat-card:nth-child(3) .num { color: var(--purple); }
-  .stat-card .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+  .stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(59,130,246,0.15);
+  }
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .stat-card .num { font-size: 1.8rem; font-weight: 700; animation: countUp 0.8s ease-out both; }
+  .stat-card:nth-child(1) .num { color: var(--accent); text-shadow: 0 0 20px rgba(59,130,246,0.4); }
+  .stat-card:nth-child(2) .num { color: var(--star); text-shadow: 0 0 20px rgba(245,158,11,0.4); }
+  .stat-card:nth-child(3) .num { color: var(--accent2); text-shadow: 0 0 20px rgba(139,92,246,0.4); }
+  .stat-card .label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
 
-  .controls { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; }
+  /* Controls */
+  .controls { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; animation: fadeInUp 0.6s ease-out 0.3s both; }
   .search-box {
-    flex: 1; min-width: 220px; padding: 0.5rem 1rem; font-size: 0.88rem;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-    color: var(--text); outline: none; transition: border-color 0.2s;
+    flex: 1; min-width: 240px; padding: 0.6rem 1.2rem; font-size: 0.9rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); outline: none; transition: all 0.3s;
+    backdrop-filter: blur(10px);
   }
-  .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-  .search-box::placeholder { color: #cbd5e1; }
+  .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+  .search-box::placeholder { color: #475569; }
   .sort-btn {
-    padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 8px;
+    padding: 0.45rem 1rem; font-size: 0.82rem; border-radius: 10px;
     background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
-    cursor: pointer; transition: all 0.2s; white-space: nowrap; font-weight: 500;
+    cursor: pointer; transition: all 0.3s; white-space: nowrap; font-weight: 500;
+    backdrop-filter: blur(10px);
   }
-  .sort-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .sort-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .sort-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .sort-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-color: transparent; }
 
   /* Category tabs */
   .cat-tabs {
-    display: flex; gap: 0.3rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+    display: flex; gap: 0.3rem; margin-bottom: 1.5rem; flex-wrap: wrap;
     border-bottom: 2px solid var(--border); padding-bottom: 0;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
   }
   .cat-tab {
-    padding: 0.35rem 0.8rem; font-size: 0.8rem; border-radius: 8px 8px 0 0;
+    padding: 0.4rem 0.85rem; font-size: 0.8rem; border-radius: 10px 10px 0 0;
     cursor: pointer; border: 1px solid transparent; border-bottom: none;
     background: transparent; color: var(--text-muted); font-weight: 500;
-    transition: all 0.2s; margin-bottom: -2px; white-space: nowrap;
+    transition: all 0.25s; margin-bottom: -2px; white-space: nowrap;
   }
-  .cat-tab:hover { color: var(--accent); background: var(--accent-light); }
+  .cat-tab:hover { color: var(--accent); background: rgba(59,130,246,0.08); }
   .cat-tab.active {
-    color: var(--accent); background: var(--surface);
-    border-color: var(--border); border-bottom: 2px solid var(--surface);
-    font-weight: 600;
+    color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-color: transparent; font-weight: 600;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
   }
   .cat-tab .count {
-    display: inline-block; background: var(--accent-light); color: var(--accent);
-    font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 100px; margin-left: 3px;
+    display: inline-block; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 100px; margin-left: 4px;
     font-weight: 600;
   }
-  .cat-tab.active .count { background: var(--accent); color: #fff; }
+  .cat-tab.active .count { background: rgba(255,255,255,0.25); color: #fff; }
 
-  /* Table layout */
-  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow); }
+  /* Table */
+  .table-wrap {
+    overflow-x: auto; border-radius: 16px; border: 1px solid var(--border);
+    background: var(--surface); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    animation: fadeIn 0.8s ease-out 0.5s both;
+  }
   table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
   thead th {
-    background: #f1f5f9; padding: 0.7rem 0.8rem; text-align: left;
-    font-weight: 600; color: var(--text-muted); font-size: 0.75rem;
-    text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 2px solid var(--border);
-    cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0;
+    background: var(--surface2); padding: 0.8rem 1rem; text-align: left;
+    font-weight: 600; color: var(--text-muted); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border);
+    cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; z-index: 2;
+    transition: color 0.2s;
   }
   thead th:hover { color: var(--accent); }
-  thead th .arrow { margin-left: 3px; font-size: 0.65rem; }
-  tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: #f8fafc; }
-  tbody td { padding: 0.65rem 0.8rem; vertical-align: top; }
-  .col-rank { width: 40px; color: var(--text-muted); font-weight: 600; text-align: center; white-space: nowrap; }
-  .col-name { width: 200px; }
-  .col-name a { font-weight: 600; color: var(--accent); text-decoration: none; }
-  .col-name a:hover { text-decoration: underline; }
+  thead th .arrow { margin-left: 3px; font-size: 0.6rem; opacity: 0.5; }
+  thead th.sorted .arrow { opacity: 1; color: var(--accent); }
+  tbody tr {
+    border-bottom: 1px solid rgba(30,41,59,0.5);
+    transition: all 0.25s;
+    animation: rowSlideIn 0.4s ease-out both;
+  }
+  tbody tr:hover {
+    background: rgba(59,130,246,0.05);
+    box-shadow: inset 4px 0 0 var(--accent);
+  }
+  tbody tr:nth-child(even) { background: rgba(255,255,255,0.01); }
+  tbody tr:nth-child(even):hover { background: rgba(59,130,246,0.05); }
+  tbody td { padding: 0.65rem 0.9rem; vertical-align: top; }
+  .col-rank { width: 44px; text-align: center; font-weight: 700; color: var(--text-muted); font-size: 0.85rem; }
+  .col-name { width: 210px; min-width: 160px; }
+  .col-name a { font-weight: 600; color: var(--accent); text-decoration: none; transition: color 0.2s; }
+  .col-name a:hover { color: var(--cyan); text-decoration: underline; }
   .col-owner { width: 130px; }
   .col-owner span { color: var(--text-muted); font-size: 0.8rem; }
-  .col-stars { width: 80px; text-align: right; font-weight: 600; color: var(--star); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .col-lang { width: 90px; }
-  .col-desc { min-width: 240px; max-width: 360px; }
-  .col-cn { min-width: 200px; max-width: 320px; color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
-  .col-tags { width: auto; }
+  .col-stars { width: 80px; text-align: right; font-weight: 700; color: var(--star); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .col-lang { width: 85px; }
+  .col-desc { min-width: 220px; max-width: 340px; color: var(--text-muted); font-size: 0.82rem; }
+  .col-cn { min-width: 200px; max-width: 320px; color: var(--green); font-size: 0.82rem; font-style: italic; opacity: 0.85; }
+  .col-tags { width: auto; white-space: nowrap; }
 
   .lang-tag {
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 100px;
-    font-size: 0.72rem; font-weight: 500;
+    font-size: 0.7rem; font-weight: 600;
   }
-  .lang-rust { background: #fef3c7; color: #92400e; }
-  .lang-ts { background: #dbeafe; color: #1e40af; }
-  .lang-js { background: #fef9c3; color: #854d0e; }
-  .lang-python { background: #dbeafe; color: #1e40af; }
-  .lang-go { background: #d1fae5; color: #065f46; }
-  .lang-other { background: #f1f5f9; color: #64748b; }
+  .lang-rust { background: rgba(210,153,34,0.15); color: #f0c040; }
+  .lang-ts { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .lang-js { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .lang-python { background: rgba(59,130,246,0.12); color: #60a5fa; }
+  .lang-go { background: rgba(6,182,212,0.15); color: #22d3ee; }
+  .lang-other { background: rgba(100,116,139,0.12); color: #94a3b8; }
 
   .tag {
     display: inline-block; padding: 0.1rem 0.4rem; border-radius: 100px;
-    font-size: 0.68rem; font-weight: 500; background: #f1f5f9; color: #475569;
-    margin: 1px 2px; white-space: nowrap;
+    font-size: 0.65rem; font-weight: 500; background: rgba(255,255,255,0.05); color: var(--text-muted);
+    margin: 1px 2px; border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.2s;
   }
+  .tag:hover { background: rgba(59,130,246,0.15); color: var(--accent); border-color: rgba(59,130,246,0.3); }
+
   .badge {
     display: inline-block; padding: 0.1rem 0.35rem; border-radius: 100px;
-    font-size: 0.65rem; font-weight: 700; margin-left: 4px; vertical-align: middle;
+    font-size: 0.62rem; font-weight: 700; margin-left: 4px; vertical-align: middle;
   }
-  .badge-top { background: var(--star); color: #fff; }
-  .badge-hot { background: var(--red); color: #fff; }
+  .badge-top { background: linear-gradient(135deg, var(--star), #f97316); color: #fff; }
+  .badge-hot { background: linear-gradient(135deg, var(--red), var(--pink)); color: #fff; }
 
-  .empty { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 1rem; }
+  .empty { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; animation: fadeIn 0.5s; }
+  .empty::before { content: '🔍'; display: block; font-size: 2.5rem; margin-bottom: 0.8rem; }
   .hidden { display: none !important; }
 
-  footer { text-align: center; margin-top: 2.5rem; color: var(--text-muted); font-size: 0.78rem; }
+  /* Footer glow line */
+  .footer-glow {
+    height: 1px; margin: 2.5rem 0 1rem;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+    opacity: 0.4;
+  }
+  footer { text-align: center; color: var(--text-muted); font-size: 0.78rem; animation: fadeIn 1s ease-out 1s both; }
 
+  /* 滚动条美化 */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+  /* 响应式 */
   @media (max-width: 900px) {
-    body { padding: 0.8rem; }
+    body { padding: 0.5rem; }
+    .container { padding: 1rem; }
+    header h1 { font-size: 1.5rem; }
     .col-cn, .col-tags { display: none; }
-    .col-name { width: 150px; }
-    .col-desc { min-width: 160px; }
-    .col-owner { width: 100px; }
+    .col-name { width: 130px; }
+    .col-desc { min-width: 120px; max-width: 180px; }
+    .col-owner { width: 90px; }
+    .stat-card { min-width: 90px; padding: 0.6rem 0.8rem; }
+  }
+  @media (max-width: 600px) {
+    .col-desc { display: none; }
+    header h1 { font-size: 1.2rem; }
   }
 </style>
 </head>
 <body>
+
+<!-- 粒子背景 -->
+<div class="particles" id="particles"></div>
+
 <div class="container">
   <header>
     <h1>🦀 hsjlyj 的 GitHub Rust 星标项目</h1>
-    <p>数据截至 2026-11-03 · 共 <span id="total-count">0</span> 个 Rust 项目</p>
+    <p class="subtitle">数据截至 2026-11-03 · 共 <span id="total-count">0</span> 个 Rust 项目 · 累计 <span id="star-count">0</span> K Stars</p>
   </header>
 
   <div class="stats">
-    <div class="stat-card"><div class="num" id="stat-total">0</div><div class="label">Rust 项目</div></div>
-    <div class="stat-card"><div class="num" id="stat-stars">0</div><div class="label">累计 Stars (K)</div></div>
-    <div class="stat-card"><div class="num" id="stat-cats">0</div><div class="label">应用分类</div></div>
+    <div class="stat-card">
+      <div class="num" id="stat-total">0</div>
+      <div class="label">Rust 项目</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-stars">0</div>
+      <div class="label">累计 Stars (K)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-cats">0</div>
+      <div class="label">应用分类</div>
+    </div>
   </div>
 
   <div class="controls">
-    <input class="search-box" id="search" type="text" placeholder="🔍 搜索项目名、Owner、描述…">
+    <input class="search-box" id="search" type="text" placeholder="🔍 搜索项目名、Owner、描述、中文简介…">
     <button class="sort-btn active" data-sort="rank" onclick="setSort('rank')">#</button>
     <button class="sort-btn" data-sort="stars" onclick="setSort('stars')">⭐ Stars</button>
     <button class="sort-btn" data-sort="name" onclick="setSort('name')">📛 名称</button>
@@ -182,14 +323,36 @@
     <div class="empty hidden" id="empty">没有匹配的项目</div>
   </div>
 
+  <div class="footer-glow"></div>
   <footer>Generated by 若光 · Data from GitHub API · Rust projects only</footer>
 </div>
 
 <script>
+// ========== 粒子背景 ==========
+(function() {
+  const c = document.getElementById('particles');
+  const W = window.innerWidth, H = window.innerHeight;
+  const colors = ['rgba(59,130,246,', 'rgba(139,92,246,', 'rgba(6,182,212,', 'rgba(245,158,11,'];
+  for (let i = 0; i < 50; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    const color = colors[Math.floor(Math.random() * colors.length)] + (Math.random() * 0.15 + 0.05) + ')';
+    p.style.cssText = `
+      width:${size}px; height:${size}px; background:${color};
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      animation-duration:${Math.random()*20+10}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    c.appendChild(p);
+  }
+})();
+
+// ========== 数据 ==========
 const DATA = [
   { rank:1,  name:"oven-sh/bun",              owner:"oven-sh",           stars:96524, lang:"TypeScript", cat:"运行时/引擎",     desc:"Incredibly fast JavaScript runtime, bundler, test runner, and package manager", cn:"极速 JavaScript 运行时，集打包、测试、包管理于一体", tags:["runtime","bundler","test"] },
   { rank:2,  name:"tauri-apps/tauri",          owner:"tauri-apps",        stars:112458,lang:"Rust",       cat:"桌面应用框架",     desc:"Build smaller, faster, more secure desktop & mobile apps with web tech", cn:"用 Web 技术构建更小更快更安全的桌面和移动应用", tags:["desktop","framework","web"] },
-  { rank:3,  name:"rustdesk/rustdesk",         owner:"rustdesk",          stars:95000, lang:"Rust",       cat:"远程桌面",         desc:"Open source remote desktop application", cn:"开源远程桌面应用，无需配置即可使用", tags:["remote","desktop","rdp"] },
+  { rank:3,  name:"rustdesk/rustdesk",         owner:"rustdesk",          stars:95000, lang:"Rust",       cat:"远程桌面",         desc:"Open source remote desktop application", cn:"开源远程桌面应用，无需复杂配置即可使用", tags:["remote","desktop","rdp"] },
   { rank:4,  name:"lencx/ChatGPT",             owner:"lencx",             stars:52000, lang:"Rust",       cat:"AI 助手/终端",     desc:"ChatGPT desktop application", cn:"ChatGPT 桌面客户端应用", tags:["ai","desktop","chatgpt"] },
   { rank:5,  name:"astral-sh/uv",              owner:"astral-sh",         stars:91493, lang:"Rust",       cat:"包管理/工具链",    desc:"Extremely fast Python package and project manager, written in Rust", cn:"极速 Python 包和项目管理器，完全用 Rust 编写", tags:["python","packaging","tooling"] },
   { rank:6,  name:"astral-sh/ruff",            owner:"astral-sh",         stars:50407, lang:"Rust",       cat:"开发工具/lint",    desc:"Extremely fast Python linter and code formatter, written in Rust", cn:"极速 Python linter 和代码格式化工具", tags:["python","linter","formatting"] },
@@ -263,7 +426,6 @@ const DATA = [
   { rank:74, name:"kaspanet/rusty-kaspa",      owner:"kaspanet",          stars:877,   lang:"Rust",       cat:"区块链/ZKP",       desc:"Kaspa full-node reference implementation in Rust", cn:"用 Rust 实现的 Kaspa 全节点参考实现", tags:["blockchain","crypto","node"] },
   { rank:75, name:"Nox/Nox",                   owner:"Nox",               stars:1841,  lang:"Rust",       cat:"区块链/ZKP",       desc:"Making Ethereum ZK proving infrastructure accessible", cn:"让以太坊 ZK 证明基础设施变得触手可及", tags:["blockchain","zkp","ethereum"] },
   { rank:76, name:"Dicklesworthstone/franken_ocr",owner:"Dicklesworthstone",stars:345, lang:"Rust",       cat:"AI 数据处理",      desc:"Pure-Rust CPU-only OCR engine for Baidu Unlimited-OCR", cn:"纯 Rust CPU 端 OCR 引擎，基于百度无限 OCR", tags:["ocr","vision","ai"] },
-  { rank:77, name:"franken_ocr follow-up",     owner:"—",                 stars:0,    lang:"Rust",       cat:"AI 数据处理",      desc:"(same as above, placeholder for future additions)", cn:"占位条目，待后续新增项目", tags:["placeholder"] },
 ];
 
 const CATS = [
@@ -298,6 +460,7 @@ const CATS = [
 
 let activeCat = 'all', sortKey = 'rank', sortAsc = true, query = '';
 
+// ========== 渲染 ==========
 function renderTabs() {
   const el = document.getElementById('cat-tabs');
   const counts = {};
@@ -314,7 +477,13 @@ function render() {
   let rows = activeCat === 'all' ? [...DATA] : DATA.filter(d => d.cat === activeCat);
   if (query) {
     const q = query.toLowerCase();
-    rows = rows.filter(r => r.name.toLowerCase().includes(q) || r.owner.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q) || r.cn.toLowerCase().includes(q) || r.tags.some(t => t.toLowerCase().includes(q)));
+    rows = rows.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      r.owner.toLowerCase().includes(q) ||
+      r.desc.toLowerCase().includes(q) ||
+      r.cn.toLowerCase().includes(q) ||
+      r.tags.some(t => t.toLowerCase().includes(q))
+    );
   }
   rows.sort((a,b) => {
     let va = a[sortKey], vb = b[sortKey];
@@ -327,14 +496,15 @@ function render() {
   if (!rows.length) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
   empty.classList.add('hidden');
 
-  tbody.innerHTML = rows.map(r => {
+  tbody.innerHTML = rows.map((r, i) => {
     const lcls = { rust:'lang-rust', typescript:'lang-ts', js:'lang-js', python:'lang-python', go:'lang-go' }[r.lang] || 'lang-other';
     const starsK = r.stars >= 10000 ? (r.stars/1000).toFixed(1) + 'K' : r.stars.toLocaleString();
     const badge = activeCat === 'all' && r.stars >= 90000 ? '<span class="badge badge-top">🏆</span>' : '';
     const hot = r.stars >= 30000 && activeCat === 'all' ? '<span class="badge badge-hot">🔥</span>' : '';
-    return `<tr>
+    const delay = (i * 0.04).toFixed(2);
+    return `<tr style="animation-delay:${delay}s">
       <td class="col-rank">${r.rank}</td>
-      <td class="col-name"><a href="https://github.com/${r.name}" target="_blank">${r.name}</a>${badge}${hot}</td>
+      <td class="col-name"><a href="https://github.com/${r.name}" target="_blank" rel="noopener">${r.name}</a>${badge}${hot}</td>
       <td class="col-owner"><span>${r.owner}</span></td>
       <td class="col-stars">⭐ ${starsK}</td>
       <td class="col-lang"><span class="lang-tag ${lcls}">${r.lang}</span></td>
@@ -343,13 +513,22 @@ function render() {
       <td class="col-tags">${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}</td>
     </tr>`;
   }).join('');
+
+  // 更新排序箭头
+  document.querySelectorAll('thead th').forEach(th => th.classList.remove('sorted'));
+  const arrMap = { rank:'arr-rank', name:'arr-name', owner:'arr-owner', stars:'arr-stars' };
+  if (arrMap[sortKey]) {
+    const arr = document.getElementById(arrMap[sortKey]);
+    arr.textContent = sortAsc ? '▲' : '▼';
+    arr.closest('th').classList.add('sorted');
+  }
 }
 
 function setCat(k) { activeCat = k; render(); }
 function setSort(k) {
   if (sortKey === k) sortAsc = !sortAsc;
   else { sortKey = k; sortAsc = k === 'rank' || k === 'name'; }
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort===k));
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === k));
   render();
 }
 function sortBy(col) { setSort(col); }
@@ -364,6 +543,7 @@ function initStats() {
   document.getElementById('stat-stars').textContent = (totalStars / 1000).toFixed(0);
   document.getElementById('stat-cats').textContent = cats;
   document.getElementById('total-count').textContent = total;
+  document.getElementById('star-count').textContent = (totalStars / 1000).toFixed(0);
 }
 
 initStats();
