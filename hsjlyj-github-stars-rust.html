@@ -579,14 +579,14 @@ function rs(){
   }
 }
 
-function sc(k){ac=k;rs()}
-function ss(k){
+function setCat(k){ac=k;rs()}
+function setSort(k){
   if(sk===k)sa=!sa;
   else{sk=k;sa=k==='rank'||k==='name';}
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.toggle('active',b.dataset.sort===k));
   rs();
 }
-function sb(c){ss(c)}
+function sortBy(c){setSort(c)}
 
 document.getElementById('search').addEventListener('input',e=>{q=e.target.value;rs()});
 
