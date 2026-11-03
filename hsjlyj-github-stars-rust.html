@@ -515,7 +515,8 @@ const CATS=[
 {k:'运行时/引擎',l:'🚀 运行时/引擎',i:'🚀'}
 ];
 
-let ac='all',sk='rank',sa=true,q='';
+let ac='all',sk='r',sa=true,q='';
+const SK_MAP={rank:'r',name:'n',owner:'o',stars:'s'};
 
 function rc(){
   const el=document.getElementById('cat-tabs');
@@ -524,9 +525,11 @@ function rc(){
   el.innerHTML=CATS.map(c=>{
     const cnt=c.k==='all'?DATA.length:(ct[c.k]||0);
     const cls=c.k===ac?'active':'';
-    return`<button class="cat-tab ${cls}" onclick="sc('${c.k}')">${c.i} ${c.l}<span class="cnt">${cnt}</span></button>`;
+    return`<button class="cat-tab ${cls}" onclick="setCat('${c.k}')">${c.i} ${c.l}<span class="cnt">${cnt}</span></button>`;
   }).join('');
 }
+
+function getSk(k){return SK_MAP[k]||k}
 
 function rs(){
   rc();
@@ -554,7 +557,7 @@ function rs(){
 
   tb.innerHTML=rows.map((r,i)=>{
     const lc={'rust':'lang-rust','typescript':'lang-ts','js':'lang-js','python':'lang-python','go':'lang-go'}[r.l]||'lang-other';
-    const sk=r.s>=10000?(r.s/1000).toFixed(1)+'K':r.s.toLocaleString();
+    const sFmt=r.s>=10000?(r.s/1000).toFixed(1)+'K':r.s.toLocaleString();
     const bd=ac==='all'&&r.s>=90000?'<span class="badge badge-top">🏆</span>':'';
     const ht=r.s>=30000&&ac==='all'?'<span class="badge badge-hot">🔥</span>':'';
     const dl=(i*.03).toFixed(3);
@@ -562,7 +565,7 @@ function rs(){
       <td class="col-rank">${r.r}</td>
       <td class="col-name"><a href="https://github.com/${r.n}" target="_blank" rel="noopener">${r.n}</a>${bd}${ht}</td>
       <td class="col-owner"><span>${r.o}</span></td>
-      <td class="col-stars">⭐ ${sk}</td>
+      <td class="col-stars">⭐ ${sFmt}</td>
       <td class="col-lang"><span class="lang-tag ${lc}">${r.l}</span></td>
       <td class="col-desc">${r.d}</td>
       <td class="col-cn">${r.cn}</td>
@@ -571,9 +574,10 @@ function rs(){
   }).join('');
 
   document.querySelectorAll('thead th').forEach(th=>th.classList.remove('sorted'));
-  const am={rank:'arr-rank',name:'arr-name',owner:'arr-owner',stars:'arr-stars'};
-  if(am[sk]){
-    const a=document.getElementById(am[sk]);
+  const AM={rank:'arr-rank',name:'arr-name',owner:'arr-owner',stars:'arr-stars'};
+  const skName=Object.keys(SK_MAP).find(k=>SK_MAP[k]===sk)||sk;
+  if(AM[skName]){
+    const a=document.getElementById(AM[skName]);
     a.textContent=sa?'▲':'▼';
     a.closest('th').classList.add('sorted');
   }
@@ -581,8 +585,9 @@ function rs(){
 
 function setCat(k){ac=k;rs()}
 function setSort(k){
-  if(sk===k)sa=!sa;
-  else{sk=k;sa=k==='rank'||k==='name';}
+  const key=SK_MAP[k]||k;
+  if(sk===key)sa=!sa;
+  else{sk=key;sa=k==='rank'||k==='name';}
   document.querySelectorAll('.sort-btn').forEach(b=>b.classList.toggle('active',b.dataset.sort===k));
   rs();
 }
